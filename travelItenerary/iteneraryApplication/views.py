@@ -349,6 +349,7 @@ def itenerary_form(request):
             plan['city_image'] = get_city_image(plan['city'])
             plan['city_description'] = get_city_description(plan['city'])
             plan['tour_dump'] = json.dumps(plan['tour'])
+            plan['plan_dump'] = json.dumps(plan)
             #print ">>>>>>>>>>", plan['city_description']
             return HttpResponseRedirect('/iteneraryApplication/show_plan/');
     
