@@ -71,6 +71,8 @@
     {# Display django.contrib.messages as Bootstrap alerts #}
     {% bootstrap_messages %}
 
+<<<<<<< HEAD
+=======
     <style>
       .image {
         background-image: url("{% static 'img/header.jpg' %}") !important;
@@ -101,6 +103,7 @@
     <script src="http://cdn-na.infragistics.com/igniteui/2018.1/latest/js/infragistics.core.js"></script>
     <script src="http://cdn-na.infragistics.com/igniteui/2018.1/latest/js/infragistics.lob.js"></script>
     <!-- end -->
+>>>>>>> 34bfe6199204acbdafdf2998b566f26b82ccf926
   </head>
 
   <body id="page-top">
@@ -131,7 +134,11 @@
       </div>
     </nav>
 
+<<<<<<< HEAD
+    <header class="masthead text-center text-white d-flex">
+=======
     <header class="masthead text-center text-white d-flex image">
+>>>>>>> 34bfe6199204acbdafdf2998b566f26b82ccf926
       <div class="container my-auto">
         <div class="row">
           <div class="col-lg-10 mx-auto">
@@ -171,6 +178,8 @@
         </div>
       </div>
 
+<<<<<<< HEAD
+=======
 
 
     <form action="/action_page.php" method="get" class="form">
@@ -198,6 +207,7 @@
     </script>
 
 
+>>>>>>> 34bfe6199204acbdafdf2998b566f26b82ccf926
     <form style="margin: auto;  width: 50%;" method="post" class="form">
       {% csrf_token %}
       {% bootstrap_form form error_types='all'%}

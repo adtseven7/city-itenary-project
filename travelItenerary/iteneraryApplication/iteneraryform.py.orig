@@ -1,17 +1,33 @@
 from django.forms import ModelForm
+<<<<<<< HEAD
+from .models import Form
+from django import forms
+import datetime
+=======
 from .models import *
 from django import forms
 import datetime
+import floppyforms
+
+
+
+>>>>>>> 34bfe6199204acbdafdf2998b566f26b82ccf926
 
 class IteneraryForm(ModelForm):
 	class Meta:
 		model = Form
 		fields = ['city','start_date','end_date','type_tags']
 		widgets = {
+<<<<<<< HEAD
+	      	'type_tags':forms.CheckboxSelectMultiple,
+	    	'start_date': forms.DateInput(attrs={'class':'datepicker'}),
+	    	'end_date': forms.DateInput(attrs={'class':'datepicker'}),
+=======
 			# 'city': floppyforms.widgets.Input(datalist=City.objects.all()),
 	      	'type_tags':forms.CheckboxSelectMultiple,
 	    	'start_date': forms.DateInput(attrs={'class':'datepicker', 'autocomplete': 'off'}),
 	    	'end_date': forms.DateInput(attrs={'class':'datepicker', 'autocomplete': 'off'})
+>>>>>>> 34bfe6199204acbdafdf2998b566f26b82ccf926
 	    }
 
 	def clean(self):

@@ -1,17 +1,27 @@
+<<<<<<< HEAD
 from .models import City, Type, PointOfInterest, OpenCloseTime, Photo, Form, DistanceTime
+=======
+from .models import City, Type, PointOfInterest, OpenCloseTime, Photo, Form
+>>>>>>> 34bfe6199204acbdafdf2998b566f26b82ccf926
 from sklearn.cluster import KMeans
 import numpy as np
 from tsp_solver import tsp_solver, calculate_time, calculate_time_upto
 from .gratification import gratification_score
-import json, datetime, copy
+<<<<<<< HEAD
+import json, datetime
 from django.core.serializers.json import DjangoJSONEncoder
 import math
 from .get_POI import get_POI_object
+=======
+import json, copy
+from django.core.serializers.json import DjangoJSONEncoder
+>>>>>>> 34bfe6199204acbdafdf2998b566f26b82ccf926
 
 half_day_time = 12
 
 grat_score_dict = dict()
 
+<<<<<<< HEAD
 def generate_POI_dict(POI):
 	POI_json = dict()
 	POI_json['lat'] = float(POI.latitude)
@@ -25,16 +35,22 @@ def generate_POI_dict(POI):
 	return POI_json
 
 def generate_gratification_score_all(POI_list,form):
+=======
+def generate_gratification_score_all(POI_list,form):
 	global grat_score_dict
+>>>>>>> 34bfe6199204acbdafdf2998b566f26b82ccf926
 	for POI in POI_list:
 		grat_score_dict[POI]=gratification_score(POI,form)
 
 def gratification_sort(POI):
 	return grat_score_dict[POI]
 
+<<<<<<< HEAD
 def tour_sort_key(POI):
 	return float(POI['time'])
 
+=======
+>>>>>>> 34bfe6199204acbdafdf2998b566f26b82ccf926
 def generate_itenerary(form):
 	city = form['city']
 	start_date = form['start_date']
@@ -70,6 +86,30 @@ def kMeanClustering(POI_list,no_days):
 	kmeans = KMeans(n_clusters=no_days, random_state=0).fit(coord_matrix)
 	return kmeans
 
+<<<<<<< HEAD
+def tsp_POI_delegation(cluster_list):
+	no_days = len(cluster_list)
+	for i in range(0,no_days-1):
+		cluster_list[i].sort(key=gratification_sort, reverse=True)
+		cluster_list[i] = tsp_solver(cluster_list[i])
+		time = calculate_time(cluster_list[i])
+		while(time>half_day_time):
+			POI_to_delegate = cluster_list[i].pop(-1)				#removing the last element to fit the time inside half a day
+			cluster_list[i+1].append(POI_to_delegate)
+			time = calculate_time(cluster_list[i])
+
+	i = no_days-1
+	cluster_list[i].sort(key=gratification_sort, reverse=True)
+	cluster_list[i] = tsp_solver(cluster_list[i])
+	time = calculate_time(cluster_list[i])
+	while(time>half_day_time):
+			del cluster_list[i][-1]			#removing the last element to fit the time inside half a day
+			time = calculate_time(cluster_list[i])
+
+	return cluster_list
+
+def itenerary_json(cluster_list,form):
+=======
 def redistribute(cluster_list):
 	extra_time_list = []
 	for tour in cluster_list:
@@ -127,6 +167,7 @@ def tsp_POI_delegation(cluster_list):
 
 def itenerary_json(cluster_list,form):
 	extra_time_list = redistribute(cluster_list)
+>>>>>>> 34bfe6199204acbdafdf2998b566f26b82ccf926
 	json_output={}
 	city = form['city']
 	start_date = form['start_date']
@@ -134,6 +175,15 @@ def itenerary_json(cluster_list,form):
 	no_days = (end_date - start_date).days+1
 	tour=[]
 
+<<<<<<< HEAD
+	for path in cluster_list:
+		path_json = []
+		for POI in path:
+			POI_json = generate_POI_dict(POI)
+			POI_json['time'] = calculate_time_upto(POI,path)
+			path_json.append(POI_json)
+		tour.append(path_json)
+=======
 	ct = 0
 	for path in cluster_list:
 		#print "*******", extra_time_list[ct]
@@ -154,6 +204,7 @@ def itenerary_json(cluster_list,form):
 			multiply += 1
 		tour.append(path_json)
 		ct += 1
+>>>>>>> 34bfe6199204acbdafdf2998b566f26b82ccf926
 		# print(path)
 
 	json_output['city'] = city.city_name
@@ -162,6 +213,7 @@ def itenerary_json(cluster_list,form):
 	json_output['tour'] = tour
 	# print(json_output)
 	return json.dumps(json_output,cls=DjangoJSONEncoder)
+<<<<<<< HEAD
 
 def time_difference(start_time,end_time):
 	output=0;
@@ -302,3 +354,5 @@ def check_itenerary_consistency(tour,event_name,event_start,event_end):
 	return True			
 
 
+=======
+>>>>>>> 34bfe6199204acbdafdf2998b566f26b82ccf926

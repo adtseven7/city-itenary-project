@@ -81,8 +81,12 @@ section h3.section-subheading {
 header.masthead {
   text-align: center;
   color: white;
+<<<<<<< HEAD
+  background-image: url("../img/header-bg.jpg");
+=======
   /* ?????????????????????????????????*/
   /*background-image: url("../img/header-bg.jpg");*/
+>>>>>>> 34bfe6199204acbdafdf2998b566f26b82ccf926
   background-repeat: no-repeat;
   background-attachment: scroll;
   background-position: center center;
@@ -153,13 +157,22 @@ header.masthead .intro-text .intro-heading {
   width: 2px;
   margin-left: -1.5px;
   content: '';
+<<<<<<< HEAD
+  background-color: #e9ecef;
+=======
   background-color: #d9d9d9;
+>>>>>>> 34bfe6199204acbdafdf2998b566f26b82ccf926
 }
 
 .timeline > li {
   position: relative;
+<<<<<<< HEAD
+  min-height: 50px;
+  margin-bottom: 50px;
+=======
   min-height: 100px;
   margin-bottom: 0px;
+>>>>>>> 34bfe6199204acbdafdf2998b566f26b82ccf926
 }
 
 .timeline > li:after, .timeline > li:before {
@@ -202,7 +215,11 @@ header.masthead .intro-text .intro-heading {
   margin-left: 0;
   text-align: center;
   color: white;
+<<<<<<< HEAD
+  border: 7px solid #e9ecef;
+=======
   border: 7px solid #d9d9d9;
+>>>>>>> 34bfe6199204acbdafdf2998b566f26b82ccf926
   border-radius: 100%;
   background-color: #fed136;
 }
@@ -257,7 +274,11 @@ header.masthead .intro-text .intro-heading {
   }
   .timeline > li {
     min-height: 100px;
+<<<<<<< HEAD
+    margin-bottom: 100px;
+=======
     margin-bottom: 10px;
+>>>>>>> 34bfe6199204acbdafdf2998b566f26b82ccf926
   }
   .timeline > li .timeline-panel {
     float: left;

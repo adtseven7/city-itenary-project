@@ -3912,7 +3912,11 @@ input[type="button"].btn-block {
   flex-grow: 1;
   text-align: center;
 }
+<<<<<<< HEAD
+
+=======
 /* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
+>>>>>>> 34bfe6199204acbdafdf2998b566f26b82ccf926
 .tab-content > .tab-pane {
   display: none;
 }
