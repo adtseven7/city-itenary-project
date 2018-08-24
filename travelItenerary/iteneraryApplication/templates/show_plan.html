@@ -654,7 +654,6 @@
   </div>
   
   
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBh9jfDgzqM654rjJIpf89VWOwtneaB-6g&callback=initMap" async defer></script>
   <script>
 
@@ -690,7 +689,6 @@
       createLeftPanel();
       setUpReactToTabClick();
       addMapLegendElements();
-
 
       
      // initMap();
@@ -783,7 +781,7 @@
         function initMap() {     
           console.log('initMap');
           directionsService = new google.maps.DirectionsService;
-          directionsDisplay = new google.maps.DirectionsRenderer;
+          directionsDisplay = new google.maps.DirectionsRenderer({suppressMarkers : true});
           map = new google.maps.Map(document.getElementById('mapCanvas'), {
             center: {
               lat: 50,
@@ -796,13 +794,15 @@
           
           displayRoute();
           displayMapLegend();
-          displayDate();     
+          displayDate(); 
+          createMarkers();    
 
 
         }
         
         function displayRoute() {
           hideMarkers();
+          
           let route = plan[curr_daynum];
           console.log('>>>>>>>>>>displayRoute');
           var waypoints = [];
@@ -823,20 +823,18 @@
               console.log(response);
               directionsDisplay.setDirections(response);
               console.log('set directions');
-            } else {
-              window.alert('Directions request failed due to ' + status);
-            }
+            } 
           });
+          showMarkers(curr_daynum);
         }
         
         function displayAllPlacesOnMap(){
           directionsDisplay.setDirections({routes: []});
           
-          if(markers.length == 0){
-            createMarkers();
-          }
-          
-          showMarkers();          
+          for(let daynum =0;daynum<numDays;daynum++){
+            showMarkers(daynum);
+          }          
+                   
         }
         
         function centerMapOnCity(){
@@ -855,8 +853,9 @@
 
           for(let daynum = 0;daynum<numDays;daynum ++){            
             let route = plan[daynum];
+            let tmpMarkers = [];
             for(let i=0;i<route.length;i++){
-              markers = markers.concat(new google.maps.Marker({
+              tmpMarkers = tmpMarkers.concat(new google.maps.Marker({
                 position : {lat: route[i].lat, lng:route[i].lng},
                 label :{
                   text: String.fromCharCode('A'.charCodeAt(0) + i), 
@@ -867,24 +866,28 @@
                 icon : pinSymbol(colors[daynum])
               }));
             }
+            markers[daynum] = tmpMarkers;
           }
         }
         
-        function showMarkers(){
+        function showMarkers(daynum){
           let newBoundary = new google.maps.LatLngBounds();
-          
-          for(index in markers){
-            markers[index].setMap(map);
-            newBoundary.extend(markers[index].position);
-          }
-          
+          let tmpMarkers = markers[daynum];
+          for(index in tmpMarkers){
+            tmpMarkers[index].setMap(map);
+            newBoundary.extend(tmpMarkers[index].position);
+          }          
           map.fitBounds(newBoundary);
         }
         
         function hideMarkers(){
-          for(index in markers){
-            markers[index].setMap(null);
+          for(let daynum=0;daynum<numDays;daynum++){
+            let tmpMarkers = markers[daynum];
+            for(index in tmpMarkers){
+              tmpMarkers[index].setMap(null);
+            }
           }
+          
         }
         
         function displayMapLegend() {
