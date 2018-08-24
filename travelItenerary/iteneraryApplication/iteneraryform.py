@@ -1,13 +1,18 @@
 from django.forms import ModelForm
-from .models import Form
+from .models import *
 from django import forms
 import datetime
+import floppyforms
+
+
+
 
 class IteneraryForm(ModelForm):
 	class Meta:
 		model = Form
 		fields = ['city','start_date','end_date','type_tags']
 		widgets = {
+			# 'city': floppyforms.widgets.Input(datalist=City.objects.all()),
 	      	'type_tags':forms.CheckboxSelectMultiple,
 	    	'start_date': forms.DateInput(attrs={'class':'datepicker', 'autocomplete': 'off'}),
 	    	'end_date': forms.DateInput(attrs={'class':'datepicker', 'autocomplete': 'off'})

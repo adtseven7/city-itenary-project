@@ -9,6 +9,7 @@ from .itenerary_generator import generate_itenerary
 from models import *
 import os, copy
 from django.conf import settings
+import datetime
 
 plan = {}
 # Create your views here.
@@ -84,8 +85,11 @@ plan = {}
 #     ]
 # }
 
-def get_image_url(city, place_id, ct):
-    return "img/data/" + city + "/sites/" + place_id + "/" + ct + ".jpeg"
+def get_image_url(city, place_name, ct):
+    return "img/new_data/" + city + "/sites/" + place_name + "/" + ct + ".jpeg"
+
+def get_city_image(city):
+    return "img/new_data/" + city + "/" + city + ".jpg"
 
 def add_images_rating(given_plan):
     for day in given_plan['tour']:
@@ -93,7 +97,7 @@ def add_images_rating(given_plan):
             place['rating_len'] = range(int(round(float(place['rating']))))
             place['images'] = []
             for i in range(0, 4):
-                place['images'].append(get_image_url(given_plan['city'], place['place_id'], str(i+1)))
+                place['images'].append(get_image_url(given_plan['city'], place['name'], str(i+1)))
             place['lat'] = float(place['lat'])
             place['lng'] = float(place['lng'])
     return given_plan
@@ -113,6 +117,11 @@ def am_pm(value):
         else: return str(hr) + " : " + str(mn) + " am"
 
 
+def get_city_description(city_name):
+    try:
+        return City.objects.get(city_name = city_name).city_description
+    except:
+        return ""
 
 def get_time_string(start, duration):
     time_string = ""
@@ -123,14 +132,17 @@ def get_time_string(start, duration):
 def correct_time_format(given_plan):
     for day in given_plan['tour']:
         for place in day:
-            time_spent = PointOfInterest.objects.get(POI_id = place['place_id']).average_time_spent
+            time_spent = place['time_spent']
             place['time_to_show'] = get_time_string(float(place['time']), float(time_spent))
     return given_plan
+
+
 
 def get_no_ratings(given_plan):
     for day in given_plan['tour']:
         for place in day:
             n_ratings = PointOfInterest.objects.get(POI_id = place['place_id']).no_people_who_rated
+            #print ">>>>>>>>>>>", place['name'], n_ratings
             place['no_of_ratings'] = n_ratings
     return given_plan
 
@@ -148,11 +160,23 @@ def get_timetravel(given_plan):
             source = PointOfInterest.objects.get(POI_id = pre_id)
             dest = PointOfInterest.objects.get(POI_id = place['place_id'])
             obj = DistanceTime.objects.get(source = source, dest = dest)
-            place['travel_dist'] = float(obj.distance) /1000.0
+            place['travel_dist'] = round(float(obj.distance) /1000.0, 1)
             place['travel_time'] = obj.time
             pre_id = place['place_id']
     return given_plan
 
+
+def get_city_list():
+    lt = City.objects.all()
+    for elem in lt:
+        elem = elem.city_name
+    return lt
+
+def get_type_list():
+    lt = Type.objects.all()
+    for elem in lt:
+        elem = elem.type_name
+    return lt
 
 
 def itenerary_form(request): 
@@ -166,7 +190,6 @@ def itenerary_form(request):
     if request.method == "POST":
         form = IteneraryForm(request.POST)
         if form.is_valid():
-            form.save()
             context = dict()
             context['city']= form.cleaned_data.get("city")
             context['start_date'] = form.cleaned_data.get("start_date")
@@ -174,10 +197,27 @@ def itenerary_form(request):
             context['type_tags'] = form.cleaned_data.get("type_tags")
             global plan
             plan = get_timetravel(get_no_ratings(correct_time_format(add_images_rating(json.loads(generate_itenerary(context))))))
+            plan['city_image'] = get_city_image(plan['city'])
+            plan['city_description'] = get_city_description(plan['city'])
+            plan['tour_dump'] = json.dumps(plan['tour'])
+            #print ">>>>>>>>>>", plan['city_description']
             return HttpResponseRedirect('/iteneraryApplication/show_plan/');
     
         # return render(request, 'templates/index2.html', {'form': itene})
-    return render(request, 'index2.html', {'form': form})
+    now = str(datetime.datetime.now()).split()[0].split('-')
+    day = now[2]
+    month = now[1]
+    year = now[0]
+    now = month + '/' + day + '/' + year
+
+    city_list = get_city_list()
+    type_list = get_type_list()
+    return render(request, 'index2.html', {
+        'form': form,
+        'today_date': now,
+        'city_list': city_list,
+        'type_list': type_list
+        })
     # return render(request, html template page to return after form, params for form)
 
 

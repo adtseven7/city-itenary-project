@@ -71,6 +71,36 @@
     {# Display django.contrib.messages as Bootstrap alerts #}
     {% bootstrap_messages %}
 
+    <style>
+      .image {
+        background-image: url("{% static 'img/header.jpg' %}") !important;
+      }
+      .combo-label {margin-bottom:.5em;}
+
+    </style>
+
+<!-- for date range
+ -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+
+
+
+    <!-- Ignite UI Required Combined CSS Files -->
+    <link href="http://cdn-na.infragistics.com/igniteui/2018.1/latest/css/themes/infragistics/infragistics.theme.css" rel="stylesheet" />
+    <link href="http://cdn-na.infragistics.com/igniteui/2018.1/latest/css/structure/infragistics.css" rel="stylesheet" />
+
+    <script src="http://ajax.aspnetcdn.com/ajax/modernizr/modernizr-2.8.3.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="http://code.jquery.com/ui/1.11.1/jquery-ui.min.js"></script>
+
+    <!-- Ignite UI Required Combined JavaScript Files -->
+    <script src="http://cdn-na.infragistics.com/igniteui/2018.1/latest/js/infragistics.core.js"></script>
+    <script src="http://cdn-na.infragistics.com/igniteui/2018.1/latest/js/infragistics.lob.js"></script>
+    <!-- end -->
   </head>
 
   <body id="page-top">
@@ -101,7 +131,7 @@
       </div>
     </nav>
 
-    <header class="masthead text-center text-white d-flex">
+    <header class="masthead text-center text-white d-flex image">
       <div class="container my-auto">
         <div class="row">
           <div class="col-lg-10 mx-auto">
@@ -140,6 +170,33 @@
           </div>
         </div>
       </div>
+
+
+
+    <form action="/action_page.php" method="get" class="form">
+      City<br/>
+      <input list="cities" name="city">
+      <datalist id="cities">
+        {% for city in city_list %}
+          <option value="{{city}}">
+        {% endfor %}
+      </datalist><br/>
+      Date<br/>
+      <input name="dates"><br/>
+      Preference Types<br/>
+    </form>
+
+    <script>
+      $('input[name="dates"]').daterangepicker({
+          "startDate": "08/24/2018",
+          "endDate": "08/24/2018",
+          "minDate": "08/24/2018"
+      }, function(start, end, label) {
+        console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
+      });
+
+    </script>
+
 
     <form style="margin: auto;  width: 50%;" method="post" class="form">
       {% csrf_token %}
