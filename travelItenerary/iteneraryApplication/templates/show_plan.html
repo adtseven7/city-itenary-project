@@ -854,7 +854,7 @@
             let route = plan[daynum];
             let tmpMarkers = [];
             for(let i=0;i<route.length;i++){
-              tmpMarkers = tmpMarkers.concat(new google.maps.Marker({
+              tmpMarkers[i] = new google.maps.Marker({
                 position : {lat: route[i].lat, lng:route[i].lng},
                 label :{
                   text: String.fromCharCode('A'.charCodeAt(0) + i), 
@@ -863,7 +863,14 @@
                   fontSize :'16px' 
                 } ,
                 icon : pinSymbol(colors[daynum])
-              }));
+              });
+              let infoWindow = new google.maps.InfoWindow({content : route[i].name})
+              tmpMarkers[i].addListener('mouseover',function(){
+                infoWindow.open(map,tmpMarkers[i]);
+              });
+              tmpMarkers[i].addListener('mouseout',function(){
+                infoWindow.close();
+              });
             }
             markers[daynum] = tmpMarkers;
           }
