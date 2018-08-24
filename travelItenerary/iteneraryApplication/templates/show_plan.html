@@ -1,0 +1,1155 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Show Plan</title>
+
+  <!-- Bootstrap core CSS -->
+
+
+  <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+  <script src="{% static 'vendor/bootstrap/js/bootstrap.min.js' %}"></script> 
+
+
+  <!-- Custom fonts for this template -->
+  <link href="{% static 'vendor/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+  <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
+  <!-- Custom styles for this template -->
+  <link href="{% static 'css/agency.css' %}" rel="stylesheet">
+  <link href="{% static 'css/creative.css' %}" rel="stylesheet">
+
+  <style>
+  .checked {
+    color: orange;
+  }
+  .image {
+    background-image: url("{% static city_image %}") !important;
+  }
+
+  /* Style the buttons inside the tab */
+  .tab a {
+    background-color: #000;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    font-size: 17px;
+    margin-top: 5px;
+    color: #8d8d8d !important;
+    cursor: default;
+  }
+
+  /* Change background color of buttons on hover */
+  .tab a:hover {
+    color: #f2f2f2 !important;
+  }
+
+  /* Create an active/current tablink class */
+  .tab a.active {
+    color: #fff;
+  }
+
+  /* Style the tab content */
+  .tabcontent {
+    display: none;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-top: none;
+  }
+
+  #Map {
+    margin-bottom: 100px !important;
+  }
+
+</style>
+
+<!-- 
+  map.html>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
+
+
+  < <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  
+  
+  <link href="{% static 'vendor/bootstrap/css/bootstrap.css' %}" rel="stylesheet">
+  <link href="{% static 'css/creative.css' %}" rel="stylesheet">
+  <link href="{% static 'vendor/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
+  
+  <style type="text/css">
+  .gm-style .gm-style-iw {
+    font-weight: 300;
+    font-size: 13px;
+    overflow: hidden
+  }
+
+  .gm-style .gm-iw {
+    color: #2c2c2c
+  }
+
+  .gm-style .gm-iw b {
+    font-weight: 400
+  }
+
+  .gm-style .gm-iw a:link,
+  .gm-style .gm-iw a:visited {
+    color: #4272db;
+    text-decoration: none
+  }
+
+  .gm-style .gm-iw a:hover {
+    color: #4272db;
+    text-decoration: underline
+  }
+
+  .gm-style .gm-iw .gm-title {
+    font-weight: 400;
+    margin-bottom: 1px
+  }
+
+  .gm-style .gm-iw .gm-basicinfo {
+    line-height: 18px;
+    padding-bottom: 12px
+  }
+
+  .gm-style .gm-iw .gm-website {
+    padding-top: 6px
+  }
+
+  .gm-style .gm-iw .gm-photos {
+    padding-bottom: 8px;
+    -ms-user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none
+  }
+
+  .gm-style .gm-iw .gm-sv,
+  .gm-style .gm-iw .gm-ph {
+    cursor: pointer;
+    height: 50px;
+    width: 100px;
+    position: relative;
+    overflow: hidden
+  }
+
+  .gm-style .gm-iw .gm-sv {
+    padding-right: 4px
+  }
+
+  .gm-style .gm-iw .gm-wsv {
+    cursor: pointer;
+    position: relative;
+    overflow: hidden
+  }
+
+  .gm-style .gm-iw .gm-sv-label,
+  .gm-style .gm-iw .gm-ph-label {
+    cursor: pointer;
+    position: absolute;
+    bottom: 6px;
+    color: #fff;
+    font-weight: 400;
+    text-shadow: rgba(0, 0, 0, 0.7) 0 1px 4px;
+    font-size: 12px
+  }
+
+  .gm-style .gm-iw .gm-stars-b,
+  .gm-style .gm-iw .gm-stars-f {
+    height: 13px;
+    font-size: 0
+  }
+
+  .gm-style .gm-iw .gm-stars-b {
+    position: relative;
+    background-position: 0 0;
+    width: 65px;
+    top: 3px;
+    margin: 0 5px
+  }
+
+  .gm-style .gm-iw .gm-rev {
+    line-height: 20px;
+    -ms-user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none
+  }
+
+  .gm-style.gm-china .gm-iw .gm-rev {
+    display: none
+  }
+
+  .gm-style .gm-iw .gm-numeric-rev {
+    font-size: 16px;
+    color: #dd4b39;
+    font-weight: 400
+  }
+
+  .gm-style .gm-iw.gm-transit {
+    margin-left: 15px
+  }
+
+  .gm-style .gm-iw.gm-transit td {
+    vertical-align: top
+  }
+
+  .gm-style .gm-iw.gm-transit .gm-time {
+    white-space: nowrap;
+    color: #676767;
+    font-weight: bold
+  }
+
+  .gm-style .gm-iw.gm-transit img {
+    width: 15px;
+    height: 15px;
+    margin: 1px 5px 0 -20px;
+    float: left
+  }
+
+  .gm-iw {
+    text-align: left;
+  }
+
+  .gm-iw .gm-numeric-rev {
+    float: left;
+  }
+
+  .gm-iw .gm-photos,
+  .gm-iw .gm-rev {
+    direction: ltr;
+  }
+
+  .gm-iw .gm-stars-f,
+  .gm-iw .gm-stars-b {
+    background: url("https://maps.gstatic.com/mapfiles/api-3/images/review_stars_hdpi.png") no-repeat;
+    background-size: 65px 26px;
+    float: left;
+  }
+
+  .gm-iw .gm-stars-f {
+    background-position: left -13px;
+  }
+
+  .gm-iw .gm-sv-label,
+  .gm-iw .gm-ph-label {
+    left: 4px;
+  }
+</style>
+<style type="text/css">
+.gm-style .gm-style-mtc label,
+.gm-style .gm-style-mtc div {
+  font-weight: 400
+}
+</style>
+<style type="text/css">
+.gm-control-active img,
+.gm-svpc img {
+  box-sizing: content-box
+}
+
+.gm-control-active:hover img:nth-child(1),
+.gm-control-active:active img:nth-child(1),
+.gm-control-active:active img:nth-child(2) {
+  display: none
+}
+</style>
+<style type="text/css">
+.gm-style .gm-style-cc span,
+.gm-style .gm-style-cc a,
+.gm-style .gm-style-mtc div {
+  font-size: 10px
+}
+</style>
+<style type="text/css">
+@media print {
+  .gm-style .gmnoprint,
+  .gmnoprint {
+    display: none
+  }
+}
+
+@media screen {
+  .gm-style .gmnoscreen,
+  .gmnoscreen {
+    display: none
+  }
+}
+</style>
+<style type="text/css">
+.gm-style-pbc {
+  transition: opacity ease-in-out;
+  background-color: rgba(0, 0, 0, 0.45);
+  text-align: center
+}
+
+.gm-style-pbt {
+  font-size: 22px;
+  color: white;
+  font-family: Roboto, Arial, sans-serif;
+  position: relative;
+  margin: 0;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%)
+}
+</style>
+
+<title>Itenary planner</title>
+
+<link rel="preconnect" href="https://netdna.bootstrapcdn.com/" crossorigin="">
+<link rel="dns-prefetch" href="https://netdna.bootstrapcdn.com/">
+
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/mapcss1.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/mapcss2.css' %}">
+
+
+
+
+
+<style type="text/css">
+.fancybox-margin {
+  margin-right: 0px;
+}
+</style>
+
+<style></style>
+<style type="text/css">
+.gm-style {
+  font: 400 11px Roboto, Arial, sans-serif;
+  text-decoration: none;
+}
+
+.gm-style img {
+  max-width: none;
+}
+</style>
+
+
+
+<!-- 
+  enddd<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< -->
+
+
+
+
+
+
+
+</head>
+<input type="hidden" id="plan" name="variable" value="{{ tour_dump }}" readonly>
+<input type="hidden" id="start_date" name="variable" value="{{ start_date }}" readonly>
+<input type="hidden" id="city" name="variable" value="{{ city }}" readonly>
+<body class="resultspage edit-enabled normal">
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+    <div class="container">
+      <a class="navbar-brand js-scroll-trigger">Itenerary Planner</a>
+      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end">
+        <div class="tab">
+          <a href="/iteneraryApplication/form">Home</a>
+          <a onclick="openTab(event, 'Timeline')" href="#Timeline">Timeline</a>
+          <a onclick="openTab(event, 'Map')" href="#Map">Map</a>
+          <a onclick="openTab(event, 'Calender')">Calender</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <header class="masthead text-center text-white d-flex image">
+    <div class="container my-auto">
+      <div class="row">
+        <div class="col-lg-10 mx-auto">
+          <h1 class="text-uppercase">
+            <strong>Welcome to {{city}}</strong>
+          </h1>
+          <hr>
+        </div>
+        <div class="col-lg-8 mx-auto">
+          <p class="text-faded mb-5">{{ city_description }}</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div id="Timeline" class="tabcontent">
+
+    <section id="about">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 text-center">
+            <h2 class="section-heading text-uppercase">Tour Plan</h2>
+            <h3 class="section-subheading text-muted">{{ city }}</h3>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-12">
+            <ul class="timeline">
+              {% for day in tour %}
+              {% if forloop.first %}
+              {% else %}
+              <li></li>
+              {% endif %}
+              <li class="timeline-inverted">
+                <div class="timeline-image">
+                  <h4>Day <br> {{ forloop.counter }}</h4>
+                </div>
+              </li>
+              {% for place in day %}
+              <li class="timeline">
+                <h3 class="section-subheading text-muted" align="center">
+                  <br/><br/><br/><br/>
+                  {% if forloop.first %}
+                  Start
+                  {% else %}
+                  {{place.travel_dist}}Km ({{place.travel_time}}mins)
+                  {% endif %}
+                </h3>
+              </li>
+              {% if forloop.counter|divisibleby:2 %}
+              <li class="timeline-inverted">
+                <div class="timeline-image">
+                  <img class="rounded-circle img-fluid" src="{% static place.images.0 %}" alt="">
+                </div>
+                <div class="timeline-panel">
+                  <div class="timeline-heading">
+                    <h4 class="subheading">{{ place.name }}</h4>
+                    <h6>                       
+                      {% for star in place.rating_len %}
+                      <span class="fa fa-star checked"></span>
+                      {% endfor %}
+                      {{place.rating}}({{place.no_of_ratings}})
+                    </h6>
+                  </div>
+                  <div class="timeline-body">
+                    <p class="text-muted">{{ place.time_to_show }}</p>
+                    <br/>
+                  </div>
+
+                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal{{place.place_id}} ">Details</button>                   
+                  <div class="modal fade" id="modal{{place.place_id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document">
+                      <div class="modal-content">
+                        <div class="modal-body">
+                          <div class="row">
+                            <div class="col-lg-5">
+                              <div id="carousel-thumb{{place.place_id}}" class="carousel slide carousel-fade carousel-thumbnails" data-ride="carousel">
+                                <div class="carousel-inner" role="listbox">
+                                  <div class="carousel-item active">
+                                    <img class="d-block w-100" src="{% static place.images.0 %}" alt="First slide">
+                                  </div>
+                                  <div class="carousel-item">
+                                    <img class="d-block w-100" src="{% static place.images.1 %}" alt="Second slide">
+                                  </div>
+                                  <div class="carousel-item">
+                                    <img class="d-block w-100" src="{% static place.images.2 %}" alt="Third slide">
+                                  </div>
+                                </div>
+                                <a class="carousel-control-prev" href="#carousel-thumb{{place.place_id}}" role="button" data-slide="prev">
+                                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                </a>
+                                <a class="carousel-control-next" href="#carousel-thumb{{place.place_id}}" role="button" data-slide="next">
+                                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                </a>
+                              </div>
+                            </div>
+                            <div class="col-lg-7">
+                              <h2 class="h2-responsive product-name">
+                                <strong>{{ place.name }}</strong>
+                              </h2>
+                              <div class="modal-body">
+                                {{ place.description }}
+                              </div>
+                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </li>
+              {% else %}
+              <li>
+                <div class="timeline-image">
+                  <img class="rounded-circle img-fluid" src="{% static place.images.0 %}" alt="">
+                </div>
+                <div class="timeline-panel">
+                  <div class="timeline-heading">
+                    <h4 class="subheading">{{ place.name }}</h4>
+                    <h6>                       
+                      {% for star in place.rating_len %}
+                      <span class="fa fa-star checked"></span>
+                      {% endfor %}
+                      {{place.rating}}({{place.no_of_ratings}})
+                    </h6>
+                  </div>
+                  <div class="timeline-body">
+                    <p class="text-muted">{{ place.time_to_show }}</p>
+                    <br/>
+                  </div>
+
+
+                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal{{place.place_id}}">Details</button>
+                  <div class="modal fade" id="modal{{place.place_id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document">
+                      <div class="modal-content">
+                        <div class="modal-body">
+                          <div class="row">
+                            <div class="col-lg-5">
+                              <div id="carousel-thumb{{place.place_id}}" class="carousel slide carousel-fade carousel-thumbnails" data-ride="carousel">
+                                <div class="carousel-inner" role="listbox">
+                                  <div class="carousel-item active">
+                                    <img class="d-block w-100" src="{% static place.images.0 %}" alt="First slide">
+                                  </div>
+                                  <div class="carousel-item">
+                                    <img class="d-block w-100" src="{% static place.images.1 %}" alt="Second slide">
+                                  </div>
+                                  <div class="carousel-item">
+                                    <img class="d-block w-100" src="{% static place.images.2 %}" alt="Third slide">
+                                  </div>
+                                </div>
+                                <a class="carousel-control-prev" href="#carousel-thumb{{place.place_id}}" role="button" data-slide="prev">
+                                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                </a>
+                                <a class="carousel-control-next" href="#carousel-thumb{{place.place_id}}" role="button" data-slide="next">
+                                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                </a>
+                              </div>
+                            </div>
+                            <div class="col-lg-7">
+                              <h2 class="h2-responsive product-name">
+                                <strong>{{ place.name }}</strong>
+                              </h2>
+                              <div class="modal-body">
+                                {{ place.description }}
+                              </div>
+                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              {% endif %}
+              {% endfor %}
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+  </section>
+
+
+
+
+
+
+
+</div>
+
+<div id="Map" class="tabcontent">
+
+  <div id="pageWrapper" class="page-wrapper ">
+
+    <div class="page-content  clear plan-header-hidden" id="pageContent">
+
+
+      <div class="plan-content" id="planContent">
+        <div class="resultpage-content" id="resultpageContent" style="opacity: 1;">
+
+          <!-- Dont mess -->
+          <div id="itineraryLeftTimelinePane" class="itinerary-left-timeline-pane  col-1 maps" style="">
+            <div id="dayList" class="day-boxes">
+
+              <div class="day-box in-plan">
+                <div class="month">Days</div>
+              </div>
+              
+            </div>
+          </div>
+          <script>
+            // function to change the active date
+            
+          </script>
+          <!-- /Dont mess -->
+          
+          
+          <div id="itineraryMainPane" class="itinerary-main-pane  col-9 daybyday">
+            <div id="maps" class="itinerary-maps-pane">
+
+
+              <!--Dont mess with this div-->
+              <div id="map-holder">
+                <div class="map-day-title day-title clearfix">
+                  <div class="day-title-container">
+                    <div class="day">
+                      <div class="mon"> </div>
+                      <div class="date"> </div>
+                      <div class="dow"> </div>
+                    </div>
+                    <div class="in-wrap">
+                      <div class="bar"></div>
+                    </div>
+                    <div class="stay-area">
+                      <div class="stayName">{{city}}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- /Dont mess -->
+              
+              
+              <!-- Dont mess -->
+              <div class="map-wrap">
+                <div id="mapCanvas" class="mapCanvas" style="position: relative; overflow: hidden;"></div>
+                <div class="map-legend">
+                  <ol class="legend-day-list">
+
+                    <li class="legendOption">
+                      <div class="slot-date" style="display:none">Day 1</div>
+                      <ul id="placeList" style="display:none">
+                      </ul>
+                    </li>
+                    
+                    <li class="legendOption">
+                      <div class="slot-date" style="display:none">Day 1</div>
+                      <ul id="placeList-day-1" style="">
+                      </ul>
+                    </li>
+                    
+                  </ol>
+                </div>
+                <div class="clear"></div>
+              </div>
+              <!-- /Dont mess -->
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+    
+  </div>
+  
+  
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBh9jfDgzqM654rjJIpf89VWOwtneaB-6g&callback=initMap" async defer></script>
+  <script>
+
+    var directionsService;
+    var directionsDisplay;
+    var map;
+    var markers = [];
+    var colors = [
+    '#98D54F',      
+    '#8333FF',
+    '#C473AB',
+    '#FF9933',
+    '#F00',
+    '#0F0',
+    '#00F',
+    '#B233FF',                       
+    '#33CAFF',
+    '#9DDAD3',
+    '#E859BD',
+    '#B2FF33'
+    ];
+    var defaultLegendcolor = 'rgb(250, 140, 0)';
+
+    document.addEventListener("DOMContentLoaded", function(event) {
+      curr_daynum = 0;
+      plan = JSON.parse(document.getElementById('plan').value);
+      start_date = new Date(document.getElementById('start_date').value);
+      city = document.getElementById('city').value;
+      numDays = plan.length;
+      
+      
+      
+      createLeftPanel();
+      setUpReactToTabClick();
+      addMapLegendElements();
+
+
+      
+     // initMap();
+    });
+    
+    function addMapLegendElements(){
+      /**
+      <ol class="legend-day-list">
+        
+        <li class="legendOption">
+          <div class="slot-date" style="display:none">Day 1</div>
+          <ul id="placeList" style="display:none">
+          </ul>
+        </li>
+        **/
+        let outerLegendDiv = $('.legend-day-list');
+        for(let daynum=0;daynum<numDays;daynum++){ 
+          let route = plan[daynum];
+          
+          innerDayPlanHTML = "";
+          for (let i = 0; i < route.length; i++) {
+            let placeHtml =
+            `<li class="visit-name">
+            <span>
+            <span class="map-marker-circle mapMarkerDay${daynum}" style="background-color: ${defaultLegendcolor};">
+            ${String.fromCharCode('A'.charCodeAt(0) + i)}
+            </span>
+            <span class="name">${route[i].name}</span>
+            </span>
+            <div class="clear"></div>
+            </li>`;
+            let travelHtml = "";
+            if (i != route.length - 1){
+              travelHtml =
+              `<li class="hop-duration bg-stripe">
+              <a class="directions text-link" href="javascript:void(0)" target="_blank">
+              ${getTravelTime(daynum,i)}</a>
+              </li>`;
+            }
+
+            innerDayPlanHTML += placeHtml + travelHtml;
+          }
+
+          outerDayPlanHTML = `
+          <li class="legendOption">
+          <div id="outer-div-day-${daynum}" class="slot-date" style="display:none">Day ${daynum+1}</div>
+          <ul id="placeList${daynum}" style="display:none ">
+          ${innerDayPlanHTML}
+          </ul>
+          </li>
+          `;
+          outerLegendDiv.append(outerDayPlanHTML);
+
+        }
+      }
+
+
+
+      function createLeftPanel(){
+        let dayListElem = $('#dayList');
+        dayListElem.append('<div class="day-box in-plan active"><div class="day text-link">' + 1 + '</div></div>');
+
+        for (let i = 2; i <= plan.length; i++) {
+          dayListElem.append('<div class="day-box in-plan"><div class="day text-link">' + i + '</div></div>');
+        }
+        dayListElem.append('<div class="day-box in-plan" id="allTab"><div class="day text-link">All</div></div>');    
+      }
+
+
+      function setUpReactToTabClick(){
+          $('.day-box.in-plan').on('click', function() { // internally will iterate and add listener to each li
+            let clickedElem = $(this);
+            clickedElem.parent().find('.active').removeClass('active'); // go to parent and then find li
+            clickedElem.addClass('active');
+            if(clickedElem.attr('id')=='allTab'){
+              curr_daynum = -1;
+              displayMapLegendAll();
+              displayAllPlacesOnMap();
+              displayDateRange();
+            }                            
+            else{
+              curr_daynum = parseInt(clickedElem.text()) - 1;
+              displayRoute();
+              displayMapLegend();
+              displayDate();
+            }              
+          });
+        }
+        
+        function initMap() {     
+          console.log('initMap');
+          directionsService = new google.maps.DirectionsService;
+          directionsDisplay = new google.maps.DirectionsRenderer;
+          map = new google.maps.Map(document.getElementById('mapCanvas'), {
+            center: {
+              lat: 50,
+              lng: 50
+            }, 
+            zoom: 12
+          });
+          console.log(map);
+          directionsDisplay.setMap(map);
+          
+          displayRoute();
+          displayMapLegend();
+          displayDate();     
+
+
+        }
+        
+        function displayRoute() {
+          hideMarkers();
+          let route = plan[curr_daynum];
+          console.log('>>>>>>>>>>displayRoute');
+          var waypoints = [];
+          for (var i = 1; i < route.length - 1; i++) {
+            waypoints.push({
+              location: new google.maps.LatLng(route[i]['lat'], route[i]['lng']),
+              stopover: true
+            });
+          }
+          directionsService.route({
+            origin: new google.maps.LatLng(route[0]['lat'], route[0]['lng']),
+            destination: new google.maps.LatLng(route[route.length - 1]['lat'], route[route.length - 1]['lng']),
+            travelMode: 'DRIVING',
+            waypoints: waypoints
+          }, function(response, status) {
+            if (status === 'OK') {
+              console.log('response returned');
+              console.log(response);
+              directionsDisplay.setDirections(response);
+              console.log('set directions');
+            } else {
+              window.alert('Directions request failed due to ' + status);
+            }
+          });
+        }
+        
+        function displayAllPlacesOnMap(){
+          directionsDisplay.setDirections({routes: []});
+          
+          if(markers.length == 0){
+            createMarkers();
+          }
+          
+          showMarkers();          
+        }
+        
+        function centerMapOnCity(){
+          let geocoder = new google.maps.Geocoder();
+          geocoder.geocode({'address': city}, function(results, status) {
+            if (status === 'OK') {
+              map.setCenter(results[0].geometry.location);
+              console.log(results[0].geometry.location);
+            } else {
+              alert('Geocode was not successful for the following reason: ' + status);
+            }
+          });
+        }
+        
+        function createMarkers(){
+
+          for(let daynum = 0;daynum<numDays;daynum ++){            
+            let route = plan[daynum];
+            for(let i=0;i<route.length;i++){
+              markers = markers.concat(new google.maps.Marker({
+                position : {lat: route[i].lat, lng:route[i].lng},
+                label :{
+                  text: String.fromCharCode('A'.charCodeAt(0) + i), 
+                  color: "black" , 
+                  fontWeight: 'bold', 
+                  fontSize :'16px' 
+                } ,
+                icon : pinSymbol(colors[daynum])
+              }));
+            }
+          }
+        }
+        
+        function showMarkers(){
+          let newBoundary = new google.maps.LatLngBounds();
+          
+          for(index in markers){
+            markers[index].setMap(map);
+            newBoundary.extend(markers[index].position);
+          }
+          
+          map.fitBounds(newBoundary);
+        }
+        
+        function hideMarkers(){
+          for(index in markers){
+            markers[index].setMap(null);
+          }
+        }
+        
+        function displayMapLegend() {
+          let daynum = curr_daynum;
+          $(`.map-marker-circle.mapMarkerDay${daynum}`).attr('style',`background-color:${defaultLegendcolor}`);
+          for(let i=0;i<numDays;i++){
+            if(i!=daynum){
+              $(`#outer-div-day-${i}`).attr('style','display:none');
+              $(`#placeList${i}`).attr('style','display:none');
+            }              
+          }
+          $(`#outer-div-day-${daynum}`).attr('style','');
+          $(`#placeList${daynum}`).attr('style','');
+        }
+        
+        function displayMapLegendAll(){
+          for(let i=0;i<numDays;i++){
+            $(`#outer-div-day-${i}`).attr('style','');
+            $(`#placeList${i}`).attr('style','');
+            $(`.map-marker-circle.mapMarkerDay${i}`).attr('style',`background-color:${colors[i]}`);
+          }
+        }
+        
+        
+        function getTravelTime(daynum , sitenum){
+          return 'Travel for '+  plan[daynum][sitenum+1]['travel_time'] + ' mins';
+        }
+        function displayDate(){
+          let daynum = curr_daynum;
+          $('.stay-area > .stayName').text(city);
+          let curr_date = new Date(start_date);
+          curr_date.setDate(curr_date.getDate() + daynum);
+          let arr = curr_date.toString().split(' ');
+          $('.mon').text(arr[1]);
+          $('.date').text(arr[2]);
+          $('.dow').text(arr[0]);
+        }
+        
+        function displayDateRange(){
+          $('.mon').text('');
+          $('.date').text('');
+          $('.dow').text('');
+          $('.stay-area > .stayName').text(`${city} : Full itenerary`);
+          
+        }
+        function pinSymbol(color) {
+          return {
+            path: 'M 0,0 C -2,-20 -10,-22 -10,-30 A 10,10 0 1,1 10,-30 C 10,-22 2,-20 0,0 z',
+            fillColor: color,
+            fillOpacity: 1,
+            strokeColor: '#000',
+            strokeWeight: 2,
+            scale: 1,
+            labelOrigin : new google.maps.Point(0, -25)
+          };
+        }
+      </script>
+
+      
+      
+
+
+
+
+
+
+
+    </div>
+
+    <div id="Calender" class="tabcontent">
+      <h3>Tokyo</h3>
+      <p>Tokyo is the capital of Japan.</p>
+    </div>
+
+    <script>
+      function openTab(evt, cityName) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+          tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+          tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(cityName).style.display = "block";
+        evt.currentTarget.className += " active";
+      }
+    </script>
+
+   <!--  <section id="about">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 text-center">
+            <h2 class="section-heading text-uppercase">Tour Plan</h2>
+            <h3 class="section-subheading text-muted">{{ city }}</h3>
+          </div>
+        </div>
+          <div class="row">
+            <div class="col-lg-12">
+              <ul class="timeline">
+                {% for day in tour %}
+                  {% if forloop.first %}
+                  {% else %}
+                    <li></li>
+                  {% endif %}
+                  <li class="timeline-inverted">
+                    <div class="timeline-image">
+                      <h4>Day <br> {{ forloop.counter }}</h4>
+                    </div>
+                  </li>
+                  {% for place in day %}
+                    <li class="timeline">
+                      <h3 class="section-subheading text-muted" align="center">
+                        <br/><br/><br/><br/>
+                          {% if forloop.first %}
+                            Start
+                          {% else %}
+                            {{place.travel_dist}}Km ({{place.travel_time}}mins)
+                          {% endif %}
+                      </h3>
+                    </li>
+                    {% if forloop.counter|divisibleby:2 %}
+                      <li class="timeline-inverted">
+                        <div class="timeline-image">
+                          <img class="rounded-circle img-fluid" src="{% static place.images.0 %}" alt="">
+                        </div>
+                        <div class="timeline-panel">
+                          <div class="timeline-heading">
+                            <h4 class="subheading">{{ place.name }}</h4>
+                            <h6>                       
+                              {% for star in place.rating_len %}
+                                <span class="fa fa-star checked"></span>
+                              {% endfor %}
+                              {{place.rating}}({{place.no_of_ratings}})
+                            </h6>
+                          </div>
+                          <div class="timeline-body">
+                            <p class="text-muted">{{ place.time_to_show }}</p>
+                            <br/>
+                          </div>
+
+                          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal{{place.place_id}} ">Details</button>                   
+                          <div class="modal fade" id="modal{{place.place_id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg" role="document">
+                              <div class="modal-content">
+                                <div class="modal-body">
+                                  <div class="row">
+                                    <div class="col-lg-5">
+                                      <div id="carousel-thumb{{place.place_id}}" class="carousel slide carousel-fade carousel-thumbnails" data-ride="carousel">
+                                          <div class="carousel-inner" role="listbox">
+                                              <div class="carousel-item active">
+                                                  <img class="d-block w-100" src="{% static place.images.0 %}" alt="First slide">
+                                              </div>
+                                              <div class="carousel-item">
+                                                  <img class="d-block w-100" src="{% static place.images.1 %}" alt="Second slide">
+                                              </div>
+                                              <div class="carousel-item">
+                                                  <img class="d-block w-100" src="{% static place.images.2 %}" alt="Third slide">
+                                              </div>
+                                          </div>
+                                          <a class="carousel-control-prev" href="#carousel-thumb{{place.place_id}}" role="button" data-slide="prev">
+                                              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                          </a>
+                                          <a class="carousel-control-next" href="#carousel-thumb{{place.place_id}}" role="button" data-slide="next">
+                                              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                          </a>
+                                      </div>
+                                    </div>
+                                    <div class="col-lg-7">
+                                      <h2 class="h2-responsive product-name">
+                                        <strong>{{ place.name }}</strong>
+                                      </h2>
+                                      <div class="modal-body">
+                                          {{ place.description }}
+                                      </div>
+                                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                        </div>
+                      </li>
+                    {% else %}
+                      <li>
+                        <div class="timeline-image">
+                          <img class="rounded-circle img-fluid" src="{% static place.images.0 %}" alt="">
+                        </div>
+                        <div class="timeline-panel">
+                          <div class="timeline-heading">
+                            <h4 class="subheading">{{ place.name }}</h4>
+                            <h6>                       
+                              {% for star in place.rating_len %}
+                                <span class="fa fa-star checked"></span>
+                              {% endfor %}
+                              {{place.rating}}({{place.no_of_ratings}})
+                            </h6>
+                          </div>
+                          <div class="timeline-body">
+                            <p class="text-muted">{{ place.time_to_show }}</p>
+                            <br/>
+                          </div>
+                          
+                                                 
+                          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal{{place.place_id}}">Details</button>
+                          <div class="modal fade" id="modal{{place.place_id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg" role="document">
+                              <div class="modal-content">
+                                <div class="modal-body">
+                                  <div class="row">
+                                    <div class="col-lg-5">
+                                      <div id="carousel-thumb{{place.place_id}}" class="carousel slide carousel-fade carousel-thumbnails" data-ride="carousel">
+                                          <div class="carousel-inner" role="listbox">
+                                              <div class="carousel-item active">
+                                                  <img class="d-block w-100" src="{% static place.images.0 %}" alt="First slide">
+                                              </div>
+                                              <div class="carousel-item">
+                                                  <img class="d-block w-100" src="{% static place.images.1 %}" alt="Second slide">
+                                              </div>
+                                              <div class="carousel-item">
+                                                  <img class="d-block w-100" src="{% static place.images.2 %}" alt="Third slide">
+                                              </div>
+                                          </div>
+                                          <a class="carousel-control-prev" href="#carousel-thumb{{place.place_id}}" role="button" data-slide="prev">
+                                              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                          </a>
+                                          <a class="carousel-control-next" href="#carousel-thumb{{place.place_id}}" role="button" data-slide="next">
+                                              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                          </a>
+                                      </div>
+                                    </div>
+                                    <div class="col-lg-7">
+                                      <h2 class="h2-responsive product-name">
+                                        <strong>{{ place.name }}</strong>
+                                      </h2>
+                                      <div class="modal-body">
+                                          {{ place.description }}
+                                      </div>
+                                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </li>
+                    {% endif %}
+                  {% endfor %}
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+    </section>
+  -->
+</body>
+
+</html>
+
+
