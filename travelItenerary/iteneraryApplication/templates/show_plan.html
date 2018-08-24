@@ -795,28 +795,38 @@
           
           
           let route = plan[curr_daynum];
-          console.log('>>>>>>>>>>displayRoute');
-          var waypoints = [];
-          for (var i = 1; i < route.length - 1; i++) {
-            waypoints.push({
-              location: new google.maps.LatLng(route[i]['lat'], route[i]['lng']),
-              stopover: true
-            });
+          if(route.length == 1){
+            directionsDisplay.setDirections({routes: []});
+            showMarkers(curr_daynum);
+            if(map.getZoom() > 11){
+              map.setZoom(11);
+            }
           }
-          directionsService.route({
-            origin: new google.maps.LatLng(route[0]['lat'], route[0]['lng']),
-            destination: new google.maps.LatLng(route[route.length - 1]['lat'], route[route.length - 1]['lng']),
-            travelMode: 'DRIVING',
-            waypoints: waypoints
-          }, function(response, status) {
-            if (status === 'OK') {
-              console.log('response returned');
-              console.log(response);
-              directionsDisplay.setDirections(response);
-              console.log('set directions');
-            } 
-          });
-          showMarkers(curr_daynum);
+          else{
+            console.log('>>>>>>>>>>displayRoute');
+            var waypoints = [];
+            for (var i = 1; i < route.length - 1; i++) {
+              waypoints.push({
+                location: new google.maps.LatLng(route[i]['lat'], route[i]['lng']),
+                stopover: true
+              });
+            }
+            directionsService.route({
+              origin: new google.maps.LatLng(route[0]['lat'], route[0]['lng']),
+              destination: new google.maps.LatLng(route[route.length - 1]['lat'], route[route.length - 1]['lng']),
+              travelMode: 'DRIVING',
+              waypoints: waypoints
+            }, function(response, status) {
+              if (status === 'OK') {
+                console.log('response returned');
+                console.log(response);
+                directionsDisplay.setDirections(response);
+                console.log('set directions');
+              } 
+            });
+            showMarkers(curr_daynum);
+          }
+          
         }
         
         function displayAllPlacesOnMap(){
