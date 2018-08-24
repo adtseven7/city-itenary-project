@@ -133,6 +133,7 @@ $(document).ready(function() {
             let list_POI = ajaxGetPOIall(plan);
             var dataList = $("#results");
             dataList.empty();
+            console.log(list_POI);
             for(var name in list_POI){
                 let opt = $("<option></option>").attr("value", list_POI[name]);
                 dataList.append(opt);

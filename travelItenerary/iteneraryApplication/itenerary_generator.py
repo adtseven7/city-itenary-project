@@ -244,7 +244,10 @@ def modify_itenerary(tour,event_name,event_start,event_end):
 def get_actual_time_difference(POI_first, POI_second, city_name):
 	POI_source = PointOfInterest.objects.filter(POI_city = city_name, POI_name = POI_first)
 	POI_dest = PointOfInterest.objects.filter(POI_city = city_name, POI_name = POI_second)
-	# print POI_source
+	print POI_source[0]
+	print "ASDASDASDASD<>><><><<><><<><><><><><><><"
+	print POI_second
+	print POI_dest
 	Distance_time_object = DistanceTime.objects.filter(source = POI_source[0], dest = POI_dest[0])
 	time_diff = Distance_time_object[0].time
 	return float(time_diff)/60.0
