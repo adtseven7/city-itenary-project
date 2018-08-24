@@ -128,9 +128,12 @@ function get_POI_from_plan(plan,event_title){
 }
 
 $(document).ready(function() {
-            let plan = JSON.parse(document.getElementById('plan').value);
+            let plan = JSON.parse(document.getElementById('plan_actual').value);
+            // console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+            // console.log(plan);
             let event_list = createEventList(plan);
             let list_POI = ajaxGetPOIall(plan);
+            console.log(list_POI);
             var dataList = $("#results");
             dataList.empty();
             console.log(list_POI);

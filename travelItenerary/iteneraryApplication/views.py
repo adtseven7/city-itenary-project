@@ -350,7 +350,7 @@ def itenerary_form(request):
             plan['city_description'] = get_city_description(plan['city'])
             plan['tour_dump'] = json.dumps(plan['tour'])
             plan['plan_dump'] = json.dumps(plan)
-            #print ">>>>>>>>>>", plan['city_description']
+            print ">>>>>>>>>>", plan['city_image']
             return HttpResponseRedirect('/iteneraryApplication/show_plan/');
     
         # return render(request, 'templates/index2.html', {'form': itene})
