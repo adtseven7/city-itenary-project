@@ -20,6 +20,10 @@ var colors = [
 ];
 var defaultLegendcolor = 'rgb(250, 140, 0)';
 
+function yo(){
+    console.log('yo');
+}
+
 document.addEventListener("DOMContentLoaded", function(event) {
     curr_daynum = 0;
     plan = JSON.parse(document.getElementById('plan').value);
@@ -131,11 +135,10 @@ function initMap() {
 function displayRoute() {
     
     hideMarkers();
-    
+    directionsDisplay.setDirections({routes: []});
     
     let route = plan[curr_daynum];
-    if(route.length == 1){
-        directionsDisplay.setDirections({routes: []});
+    if(route.length == 1){        
         showMarkers(curr_daynum);
         if(map.getZoom() > 11){
             map.setZoom(11);

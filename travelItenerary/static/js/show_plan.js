@@ -14,7 +14,10 @@ function openTab(evt, tabName) {
   evt.currentTarget.className += " active";
   if(tabName == 'Calender'){
     $('.fc-prev-button').trigger('click');
-    $('.fc-next-button').trigger('click');
-    
+    $('.fc-next-button').trigger('click');  
   }
+  else if(tabName == 'Map'){
+    yo();
+  }
+
 }
