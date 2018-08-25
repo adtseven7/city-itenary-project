@@ -6,7 +6,7 @@ not_matching_score = 100
 matching_score = 10000
 
 def p_mean(rating):
-	return float((rating - 1)/4)
+	return max(0.0, float((rating - 1)/4))
 
 def calc_popularity(POI):
 	z_score = st.norm.ppf(0.975)
