@@ -10,6 +10,15 @@ function checkWrongCity() {
 	return false;
 }
 
+function showTypeOptions() {
+    var x = document.getElementById("multiselectDropDown");
+    if (x.style.display === "none") {
+        x.style.display = "block";
+    } else {
+        x.style.display = "none";
+    }
+}
+
 
 jQuery.fn.multiselect = function() {
     $(this).each(function() {
