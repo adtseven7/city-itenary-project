@@ -330,6 +330,36 @@ a[data-goto]:hover {
 	font-size: 22px;
 	margin-bottom: 10px
 }
+.itinerary-maps-pane .map-marker-circle {
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    font-size: .86em;
+    background: #fff;
+    color: #fff;
+    vertical-align: middle;
+    line-height: 20px;
+}
+.itinerary-maps-pane .map-legend ul li>ul>li.hop-duration, .itinerary-maps-pane .map-legend ol li>ul>li.hop-duration {
+    padding: 5px 0 5px 8px;
+    height: 31px;
+    border-bottom: 1px dashed #e6e6e6;
+    border-top: 1px dashed #e6e6e6;
+}
+.itinerary-maps-pane .map-legend ul li>ul>li.hop-duration a, .itinerary-maps-pane .map-legend ol li>ul>li.hop-duration a {
+    font-style: italic;
+    color: #666;
+}
+.itinerary-maps-pane .map-legend .map-marker-circle {
+    display: block;
+    float: left;
+    margin: 8px 8px 8px 5px;
+    box-shadow: 0 0 black;
+}
+.bg-stripe {
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAFUlEQVQY02NgwA14oZh0BUNLJwgAAGsQANFhg83nAAAAAElFTkSuQmCC)!important;
+}
 
 .itinerary-maps-pane .map-legend ol,
 .itinerary-maps-pane .map-legend ul {
