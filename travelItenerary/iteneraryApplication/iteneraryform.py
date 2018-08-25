@@ -4,15 +4,19 @@ from django import forms
 import datetime
 
 class IteneraryForm(ModelForm):
+	# class Meta:
+	# 	model = Form
+	# 	fields = ['city','start_date','end_date','type_tags']
+	# 	widgets = {
+	# 		# 'city': floppyforms.widgets.Input(datalist=City.objects.all()),
+	#       	'type_tags':forms.CheckboxSelectMultiple,
+	#     	'start_date': forms.DateInput(attrs={'class':'datepicker', 'autocomplete': 'off'}),
+	#     	'end_date': forms.DateInput(attrs={'class':'datepicker', 'autocomplete': 'off'})
+	#     }
 	class Meta:
 		model = Form
-		fields = ['city','start_date','end_date','type_tags']
-		widgets = {
-			# 'city': floppyforms.widgets.Input(datalist=City.objects.all()),
-	      	'type_tags':forms.CheckboxSelectMultiple,
-	    	'start_date': forms.DateInput(attrs={'class':'datepicker', 'autocomplete': 'off'}),
-	    	'end_date': forms.DateInput(attrs={'class':'datepicker', 'autocomplete': 'off'})
-	    }
+		fields = []
+
 
 	def clean(self):
 		cleaned_data = super(IteneraryForm, self).clean()

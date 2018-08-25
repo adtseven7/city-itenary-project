@@ -47,6 +47,7 @@
     <!-- <script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script> -->
     <script src="{% static 'vendor/scrollreveal/scrollreveal.min.js' %}"></script>
     <script src="{% static 'vendor/magnific-popup/jquery.magnific-popup.min.js' %}"></script>
+    <script src="{% static 'js/index2.js' %}"></script>
 
     <script type="text/javascript">
       $(function() {
@@ -62,7 +63,7 @@
           minDate: 0,
         });
       });
-      </script>
+    </script>
 
 
 
@@ -77,6 +78,27 @@
       }
       .combo-label {margin-bottom:.5em;}
 
+      .input {
+        width: 100%;
+      }
+
+      .multiselect {
+          width:70%;
+          height:5em;
+          border:solid 1px #e6e6e6;
+          overflow:auto;
+          margin-bottom: 1em;
+      }
+       
+    /*  .multiselect label {
+          display:block;
+      }
+*/       
+      .multiselect-on {
+          color:#ffffff;
+          background-color:#000099;
+      }
+
     </style>
 
 <!-- for date range
@@ -89,21 +111,12 @@
 
 
 
-    <!-- Ignite UI Required Combined CSS Files -->
-    <link href="http://cdn-na.infragistics.com/igniteui/2018.1/latest/css/themes/infragistics/infragistics.theme.css" rel="stylesheet" />
-    <link href="http://cdn-na.infragistics.com/igniteui/2018.1/latest/css/structure/infragistics.css" rel="stylesheet" />
 
-    <script src="http://ajax.aspnetcdn.com/ajax/modernizr/modernizr-2.8.3.js"></script>
-    <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
-    <script src="http://code.jquery.com/ui/1.11.1/jquery-ui.min.js"></script>
-
-    <!-- Ignite UI Required Combined JavaScript Files -->
-    <script src="http://cdn-na.infragistics.com/igniteui/2018.1/latest/js/infragistics.core.js"></script>
-    <script src="http://cdn-na.infragistics.com/igniteui/2018.1/latest/js/infragistics.lob.js"></script>
-    <!-- end -->
   </head>
 
   <body id="page-top">
+
+    
 
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
@@ -173,41 +186,62 @@
 
 
 
-    <form action="/action_page.php" method="get" class="form">
+    <form style="margin-left:25%" method="post" class="form" onsubmit="return checkWrongCity()">
+      {% csrf_token %}
+      {% bootstrap_form form error_types='all'%}
+
+<!-- 
+change start -->
       City<br/>
-      <input list="cities" name="city">
+      <input list="cities" name="city" id="city" autocomplete="off" style="width: 70%">
       <datalist id="cities">
         {% for city in city_list %}
-          <option value="{{city}}">
+          <option value="{{city}}"/>
         {% endfor %}
       </datalist><br/>
-      Date<br/>
-      <input name="dates"><br/>
-      Preference Types<br/>
+      <div id="errorCity" class="alert alert-danger" style="width:70%; line-height: 5px; visibility: hidden;">
+        <strong>Error!</strong> City has been destroyed! go to different city
+      </div>
+
+      Date<br>
+      <input name="dates" autocomplete="off" style="width: 70%"><br/><br/>
+      Types<br>
+      <div class="multiselect">
+      {% for type in type_list %}
+        <input id="type-{{type}}" type="checkbox" name="type-{{type}}" value="yes" />
+        <label for="type-{{type}}">{{type}}</label><br>
+      {% endfor %}
+      </div>
+
+
+      <input type="submit" name="submit" value="submit post">
+
+      <!-- Date<br/>
+      <input name="dates"><br/> -->
+<!-- 
+change end -->
+<!-- 
+      {% buttons %}
+        <button type="submit" class="btn btn-primary">
+          {% bootstrap_icon "thumb" %} Submit
+        </button>
+      {% endbuttons %} -->
     </form>
+
+
+
 
     <script>
       $('input[name="dates"]').daterangepicker({
           "startDate": "08/24/2018",
           "endDate": "08/24/2018",
-          "minDate": "08/24/2018"
+          "minDate": "08/24/2018",
+          "maxDate": "09/24/2018"
       }, function(start, end, label) {
         console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
       });
 
     </script>
-
-
-    <form style="margin: auto;  width: 50%;" method="post" class="form">
-      {% csrf_token %}
-      {% bootstrap_form form error_types='all'%}
-
-      {% buttons %}
-        <button type="submit" class="btn btn-primary">
-          {% bootstrap_icon "thumb" %} Submit
-        </button>
-      {% endbuttons %}
-    </form>
     </section>
 
     <!-- <section class="p-0" id="portfolio">
