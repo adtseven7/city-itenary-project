@@ -48,6 +48,7 @@
 </head>
 
 <body onload="openTab(event, 'Timeline')">
+  {% csrf_token %}
   <input type="hidden" id="plan" name="variable" value="{{ tour_dump }}" readonly>
   <input type="hidden" id="plan_actual" name="variable" value="{{ plan_dump }}" readonly>
   <input type="hidden" id="start_date" name="variable" value="{{ start_date }}" readonly>

@@ -377,7 +377,8 @@ def show_itenerary_list(request):
 def show_plan(request):
     #will get the plan from the algorithm
     global plan
-    return HttpResponse(loader.get_template("show_plan.html").render(plan))
+    return render(request, 'show_plan.html', plan);
+    # return HttpResponse(loader.get_template("show_plan.html").render(plan))
 
 def thanks(request):
     return HttpResponse("Hello World")
