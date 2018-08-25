@@ -130,7 +130,7 @@ function get_POI_from_plan(plan,event_title){
 $(document).ready(function() {
             let plan = JSON.parse(document.getElementById('plan_actual').value);
             // console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-            // console.log(plan);
+            console.log(plan);
             let event_list = createEventList(plan);
             let list_POI = ajaxGetPOIall(plan);
             console.log(list_POI);
@@ -165,6 +165,7 @@ $(document).ready(function() {
                         success: function (data) {
                             // console.log(data);
                             plan = data;
+                            document.getElementById('plan_actual').value = JSON.stringify(plan);
                         },
                         error: function (data) {
                             alert("conflict found. reverting");
@@ -192,6 +193,8 @@ $(document).ready(function() {
                         success: function (data) {
                             // console.log(data);
                             plan = data;
+                            document.getElementById('plan_actual').value = JSON.stringify(plan);
+                            console.log(plan);
                         },
                         error: function (data) {
                             alert("conflict found. reverting");
@@ -232,6 +235,7 @@ $(document).ready(function() {
                             success: function (data) {
                                 // console.log(data);
                                 plan = data;
+                                document.getElementById('plan_actual').value = JSON.stringify(plan);
                             }
                         });
                     }
@@ -288,6 +292,7 @@ $(document).ready(function() {
                             $('#calendar').fullCalendar('renderEvent', event_to_add, stick=true);
                             console.log(event_list);
                             plan = data;
+                            document.getElementById('plan_actual').value = JSON.stringify(plan);
                         },
                         error: function (data) {
                             alert("conflict found. reverting");
@@ -312,5 +317,7 @@ $(document).ready(function() {
                     return false;
                 });
                plan = remove_POI_from_plan(plan,event_title);
+               document.getElementById('plan_actual').value = JSON.stringify(plan);
+
             });
         });

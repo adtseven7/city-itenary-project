@@ -177,7 +177,8 @@ def POI_time(time):
 
 
 def modify_itenerary(tour,event_name,event_start,event_end):
-	start_day = datetime.datetime.strptime(tour['start_date'], "%Y-%m-%d").date()
+	start_day = tour['start_date'].split("T")[0];
+	start_day = datetime.datetime.strptime(start_day, "%Y-%m-%d").date()
 	# print tour
 	if not check_itenerary_consistency(tour,event_name,event_start,event_end):
 		return -1
@@ -241,6 +242,7 @@ def modify_itenerary(tour,event_name,event_start,event_end):
 
 	return tour
 
+
 def get_actual_time_difference(POI_first, POI_second, city_name):
 	POI_source = PointOfInterest.objects.filter(POI_city = city_name, POI_name = POI_first)
 	POI_dest = PointOfInterest.objects.filter(POI_city = city_name, POI_name = POI_second)
@@ -255,7 +257,8 @@ def get_actual_time_difference(POI_first, POI_second, city_name):
 
 
 def check_itenerary_consistency(tour,event_name,event_start,event_end):
-	start_day = datetime.datetime.strptime(tour['start_date'], "%Y-%m-%d").date()
+	start_day = tour['start_date'].split("T")[0];
+	start_day = datetime.datetime.strptime(start_day, "%Y-%m-%d").date()
 	# POI = get_POI_object(event_name,tour['city'])
 
 	for path_index in range(0,len(tour['tour'])):
