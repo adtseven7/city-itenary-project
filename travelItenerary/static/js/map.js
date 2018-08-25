@@ -27,14 +27,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
     city = document.getElementById('city').value;
     numDays = plan.length;
     
-    
-    
     createLeftPanel();
     setUpReactToTabClick();
     addMapLegendElements();
     initMap();
-    
-    
 });
 
 function addMapLegendElements(){
