@@ -194,7 +194,7 @@ $(document).ready(function() {
                             // console.log(data);
                             plan = data;
                             document.getElementById('plan_actual').value = JSON.stringify(plan);
-                            console.log(plan);
+                            // console.log(plan);
                         },
                         error: function (data) {
                             alert("conflict found. reverting");
