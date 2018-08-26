@@ -92,7 +92,7 @@ def new_find_route(cluster_list):
 		print 'day {}'.format(i)
 		cluster_list[i].sort(key=gratification_sort, reverse=True)
 		print '		sorted cluster by grat score'
-		threshold = 15
+		threshold = 11
 		print '		before : cluster has {} sites'.format(len(cluster_list[i]))
 		while len(cluster_list[i]) > threshold:
 			extra_poi = cluster_list[i].pop(-1)
