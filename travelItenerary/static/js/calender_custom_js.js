@@ -143,6 +143,15 @@ $(document).ready(function() {
             }
 
             $('#calendar').fullCalendar({
+                customButtons: {
+                    addIteneraryButton: {
+                      text: 'add site to itenerary',
+                      click: function() {
+                        alert('clicked the custom button!');
+                      }
+                    }
+                  },
+                // header: { center: agendaItenerary},
                 schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
                 defaultView: 'agendaItenerary',
                 defaultDate: plan['start_date'],
@@ -260,7 +269,7 @@ $(document).ready(function() {
                     agendaItenerary: {
                         type: 'agenda',
                         duration: { days: plan['no_days'] },
-                        buttonText: 'Itenerary'
+                        buttonText: 'Add  site in itenerary'
                     }
                 }
             });
@@ -317,9 +326,9 @@ $(document).ready(function() {
                     return false;
                 });
                plan = remove_POI_from_plan(plan,event_title);
-               console.log(plan);
+               // console.log(plan);
                document.getElementById('plan_actual').value = JSON.stringify(plan);
-               console.log(document.getElementById('plan_actual').value);
+               // console.log(document.getElementById('plan_actual').value);
 
             });
         });

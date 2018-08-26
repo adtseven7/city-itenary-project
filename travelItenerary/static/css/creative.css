@@ -112,24 +112,18 @@ img::-moz-selection {
 #mainNav .navbar-nav > li.nav-item > a.nav-link:focus:hover {
   color: #F05F40;
 }
-/*
-uncomment the commented to make the navbar transparent 
-*/
 #mainNav .navbar-nav > li.nav-item > a.nav-link.active,
 #mainNav .navbar-nav > li.nav-item > a.nav-link:focus.active {
   color: #F05F40 !important;
-  /*background-color: transparent; */
 }
 
 #mainNav .navbar-nav > li.nav-item > a.nav-link.active:hover,
 #mainNav .navbar-nav > li.nav-item > a.nav-link:focus.active:hover {
-  /*background-color: transparent;*/
 }
 
 @media (min-width: 992px) {
   #mainNav {
     border-color: transparent;
-   /* background-color: transparent;*/
   }
   #mainNav .navbar-brand {
     color: rgba(255, 255, 255, 0.7);
@@ -171,8 +165,7 @@ uncomment the commented to make the navbar transparent
 header.masthead {
   padding-top: 10rem;
   padding-bottom: calc(10rem - 56px);
-/*  background-image: url("../img/header.jpg");
-*/  background-position: center center;
+  background-position: center center;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
