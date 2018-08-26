@@ -20,8 +20,19 @@ var colors = [
 ];
 var defaultLegendcolor = 'rgb(250, 140, 0)';
 
-function yo(){
+function onMapTabOpened(){
     console.log('yo');
+    plan =  JSON.parse($('#plan_actual').attr('value')).tour;
+
+   
+    recreateMapLegendElements();
+    hideMarkers();
+    createMarkers();
+    displayDate();
+    displayMapLegend();
+    displayRoute();
+
+
 }
 
 document.addEventListener("DOMContentLoaded", function(event) {
@@ -37,6 +48,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
     initMap();
 });
 
+function recreateMapLegendElements(){
+    let outerLegendDiv = $('.legend-day-list');
+    outerLegendDiv.empty();
+    addMapLegendElements();
+}
 function addMapLegendElements(){
     let outerLegendDiv = $('.legend-day-list');
     for(let daynum=0;daynum<numDays;daynum++){ 
@@ -241,6 +257,7 @@ function showMarkersAll(){
 }
 
 function hideMarkers(){
+    console.log('hide markers');
     for(let daynum=0;daynum<numDays;daynum++){
         let tmpMarkers = markers[daynum];
         for(index in tmpMarkers){

@@ -17,7 +17,6 @@ function openTab(evt, tabName) {
     $('.fc-next-button').trigger('click');  
   }
   else if(tabName == 'Map'){
-    yo();
+    onMapTabOpened();
   }
-
 }
