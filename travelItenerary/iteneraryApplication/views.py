@@ -235,6 +235,7 @@ plan = {}
 #     'no_days': 2
 # }
 
+
 def get_city_image(city):
     return "img/new_data/" + city + "/" + city + ".jpg"
 
