@@ -20,9 +20,9 @@ var colors = [
 ];
 var defaultLegendcolor = 'rgb(250, 140, 0)';
 
-function yo(){
-    console.log('yo');
-}
+// function yo(){
+//     console.log('yo');
+// }
 
 document.addEventListener("DOMContentLoaded", function(event) {
     curr_daynum = 0;
@@ -112,7 +112,7 @@ function setUpReactToTabClick(){
 }
 
 function initMap() {     
-    console.log('initMap');
+    // console.log('initMap');
     directionsService = new google.maps.DirectionsService;
     directionsDisplay = new google.maps.DirectionsRenderer({suppressMarkers : true});
     map = new google.maps.Map(document.getElementById('mapCanvas'), {
@@ -122,7 +122,7 @@ function initMap() {
         }, 
         zoom: 12
     });
-    console.log(map);
+    // console.log(map);
     directionsDisplay.setMap(map);
     
     createMarkers();  
@@ -145,7 +145,7 @@ function displayRoute() {
         }
     }
     else{
-        console.log('>>>>>>>>>>displayRoute');
+        // console.log('>>>>>>>>>>displayRoute');
         var waypoints = [];
         for (var i = 1; i < route.length - 1; i++) {
             waypoints.push({
@@ -160,10 +160,10 @@ function displayRoute() {
             waypoints: waypoints
         }, function(response, status) {
             if (status === 'OK') {
-                console.log('response returned');
-                console.log(response);
+                // console.log('response returned');
+                // console.log(response);
                 directionsDisplay.setDirections(response);
-                console.log('set directions');
+                // console.log('set directions');
             } 
         });
         showMarkers(curr_daynum);
@@ -183,7 +183,7 @@ function centerMapOnCity(){
     geocoder.geocode({'address': city}, function(results, status) {
         if (status === 'OK') {
             map.setCenter(results[0].geometry.location);
-            console.log(results[0].geometry.location);
+            // console.log(results[0].geometry.location);
         } else {
             alert('Geocode was not successful for the following reason: ' + status);
         }
@@ -191,7 +191,7 @@ function centerMapOnCity(){
 }
 
 function createMarkers(){
-    console.log('createMarkers');
+    // console.log('createMarkers');
     for(let daynum = 0;daynum<numDays;daynum ++){            
         let route = plan[daynum];
         let tmpMarkers = [];

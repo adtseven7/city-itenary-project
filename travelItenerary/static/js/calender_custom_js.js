@@ -7,7 +7,7 @@ function getMinutes(time){
 }
 
 function eventExists(POI_name, event_list){
-    console.log(event_list);
+    // console.log(event_list);
     for(index in event_list){
         event = event_list[index];
         if(POI_name == event.title)
@@ -130,13 +130,13 @@ function get_POI_from_plan(plan,event_title){
 $(document).ready(function() {
             let plan = JSON.parse(document.getElementById('plan_actual').value);
             // console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-            console.log(plan);
+            // console.log(plan);
             let event_list = createEventList(plan);
             let list_POI = ajaxGetPOIall(plan);
-            console.log(list_POI);
+            // console.log(list_POI);
             var dataList = $("#results");
             dataList.empty();
-            console.log(list_POI);
+            // console.log(list_POI);
             for(var name in list_POI){
                 let opt = $("<option></option>").attr("value", list_POI[name]);
                 dataList.append(opt);
@@ -210,7 +210,7 @@ $(document).ready(function() {
 
                         if(event_list[index]['title']==event.title){
                             if_event_registered = true;
-                            console.log(event_list[index]['title']);
+                            // console.log(event_list[index]['title']);
                         }
 
                     }
@@ -247,7 +247,7 @@ $(document).ready(function() {
                        $(this).find('h4.modal-title').text(calEvent.title);
                     });
                     let POI = get_POI_from_plan(plan,calEvent.title);
-                    console.log(POI);
+                    // console.log(POI);
                     // console.log(document.querySelector("#img_slide_0"));
                     document.querySelector("#img_slide_0").src = "/static/"+POI['images'][0];
                     document.querySelector("#img_slide_1").src = "/static/"+POI['images'][1];
@@ -273,7 +273,7 @@ $(document).ready(function() {
 
                 else{
                     let event_to_add = getEventObject(POI_name,plan['start_date']);
-                    console.log()
+                    // console.log()
                     $.ajax({
                         type: 'POST',
                         url: '/iteneraryApplication/ajax/update_tour/',
@@ -287,10 +287,10 @@ $(document).ready(function() {
                         dataType: 'json',
                         
                         success: function (data) {
-                            console.log(event_to_add['end'])
+                            // console.log(event_to_add['end'])
                             event_list.push(event_to_add);
                             $('#calendar').fullCalendar('renderEvent', event_to_add, stick=true);
-                            console.log(event_list);
+                            // console.log(event_list);
                             plan = data;
                             document.getElementById('plan_actual').value = JSON.stringify(plan);
                         },
@@ -305,11 +305,11 @@ $(document).ready(function() {
 
             $('#deleteEventButton').click(function(){
                let event_title = $('#infoModal').find('h4.modal-title').text();
-               console.log(event_title);
+               // console.log(event_title);
                event_to_delete_index = getEvent(event_title,event_list);
                // console.log('123');
                event_list.splice(event_to_delete_index, 1);
-               console.log(event_to_delete_index);
+               // console.log(event_to_delete_index);
                $('#calendar').fullCalendar('removeEvents', function(eventObject) {
                     if(eventObject.title == event_title){
                         return true;
@@ -317,7 +317,9 @@ $(document).ready(function() {
                     return false;
                 });
                plan = remove_POI_from_plan(plan,event_title);
+               console.log(plan);
                document.getElementById('plan_actual').value = JSON.stringify(plan);
+               console.log(document.getElementById('plan_actual').value);
 
             });
         });

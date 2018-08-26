@@ -1,5 +1,5 @@
 function openTab(evt, tabName) {
-  console.log(tabName);
+  // console.log(tabName);
   
   var i, tabcontent, tablinks;
   tabcontent = document.getElementsByClassName("tabcontent");
@@ -17,7 +17,10 @@ function openTab(evt, tabName) {
     $('.fc-next-button').trigger('click');  
   }
   else if(tabName == 'Map'){
-    yo();
+    // yo();
+  }
+  else if(tabName == 'Timeline'){
+    loadTimeline();
   }
 
 }

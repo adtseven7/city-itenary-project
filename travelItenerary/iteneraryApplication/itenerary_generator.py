@@ -7,7 +7,7 @@ import json, datetime, copy
 from django.core.serializers.json import DjangoJSONEncoder
 import math
 from .get_POI import get_POI_object
-
+from .generate_cluster_ordering import generate_order
 half_day_time = 12
 
 grat_score_dict = dict()
@@ -50,6 +50,7 @@ def generate_itenerary(form):
 	POI_list = PointOfInterest.objects.filter(POI_city = city)
 	generate_gratification_score_all(POI_list,form)
 	kmeans = kMeanClustering(POI_list,no_days)
+	print kmeans.cluster_centers_
 	
 	cluster_list = []
 
@@ -59,7 +60,7 @@ def generate_itenerary(form):
 	for i in range(0,len(POI_list)):
 		cluster_list[kmeans.labels_[i]].append(POI_list[i])
 	
-	
+	cluster_list = generate_order(cluster_list,kmeans.cluster_centers_, no_days)
 
 	#cluster_list = tsp_POI_delegation(cluster_list)
 	cluster_list = new_find_route(cluster_list)

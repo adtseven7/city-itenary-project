@@ -1,4 +1,4 @@
-$(function loadTimeline(){
+function loadTimeline(){
 	let PLAN = JSON.parse(document.getElementById('plan_actual').value);
 	let ELEMENT = document.getElementById('planTimelineView');
 	let HTML = [
@@ -169,5 +169,5 @@ $(function loadTimeline(){
 	// console.log(HTML.length)
 	HTML = HTML.join('\n')
 	ELEMENT.innerHTML = HTML
-});
+};
 
