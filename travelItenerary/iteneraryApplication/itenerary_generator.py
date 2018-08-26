@@ -62,8 +62,8 @@ def generate_itenerary(form):
 	
 	cluster_list = generate_order(cluster_list,kmeans.cluster_centers_, no_days)
 
-	#cluster_list = tsp_POI_delegation(cluster_list)
-	cluster_list = new_find_route(cluster_list)
+	cluster_list = tsp_POI_delegation(cluster_list)
+	#cluster_list = new_find_route(cluster_list)
 	# print(cluster_list[0])
 	output = itenerary_json(cluster_list,form)
 	#print(output)
@@ -93,7 +93,7 @@ def new_find_route(cluster_list):
 		print 'day {}'.format(i)
 		cluster_list[i].sort(key=gratification_sort, reverse=True)
 		print '		sorted cluster by grat score'
-		threshold = 15
+		threshold = 11
 		print '		before : cluster has {} sites'.format(len(cluster_list[i]))
 		while len(cluster_list[i]) > threshold:
 			extra_poi = cluster_list[i].pop(-1)
@@ -194,7 +194,7 @@ def tsp_POI_delegation(cluster_list):
 	cluster_list_tsp[i] = tsp_solver(cluster_list[i])
 	time = calculate_time(cluster_list_tsp[i])
 	while(time>half_day_time):
-			print "++++++++++++++++++++++", cluster_list[i][-1].POI_name
+			# print "++++++++++++++++++++++", cluster_list[i][-1].POI_name
 			del cluster_list[i][-1]			#removing the last element to fit the time inside half a day
 			cluster_list_tsp[i] = tsp_solver(cluster_list[i])
 			time = calculate_time(cluster_list_tsp[i])

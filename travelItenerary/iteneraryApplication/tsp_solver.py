@@ -13,15 +13,15 @@ def create_distance_callback(dist_matrix):
 	return distance_callback
 
 def create_distance_matrix(POI_list):
-	no_POI = len(POI_list)
+	no_POI = len(POI_list) + 1
 	dist_matrix = np.zeros((no_POI,no_POI))
-	for i in range(0,len(POI_list)):
-		for j in range(0,len(POI_list)):
+	for i in range(1,len(POI_list)):
+		for j in range(1,len(POI_list)):
 			if i==j:
 				dist_matrix[i][j] = 0
 			else:
-				distance_i_to_j_object = DistanceTime.objects.filter(source = POI_list[i], dest = POI_list[j])
-				dist_matrix[i][j] = max(Decimal(0.25), Decimal(distance_i_to_j_object[0].time/60.0))
+				distance_i_to_j_object = DistanceTime.objects.filter(source = POI_list[i-1], dest = POI_list[j-1])
+				dist_matrix[i][j] = Decimal(float(distance_i_to_j_object[0].distance)/60.0)
 	return dist_matrix
 
 
@@ -50,10 +50,10 @@ def tsp_solver(POI_list):
 	    	# Only one route here; otherwise iterate from 0 to routing.vehicles() - 1
 			route_number = 0
 			index = routing.Start(route_number) # Index of the variable for the starting node.
-
+			index = assignment.Value(routing.NextVar(index))
 			while not routing.IsEnd(index):
 		 		# Convert variable indices to node indices in the displayed route.
-				route.append(POI_list[routing.IndexToNode(index)])
+				route.append(POI_list[routing.IndexToNode(index) - 1])
 				index = assignment.Value(routing.NextVar(index))
 	    	# route.append(POI_list[routing.IndexToNode(index)])
 			print "route calculated"
