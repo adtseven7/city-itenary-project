@@ -32,6 +32,12 @@ def generate_gratification_score_all(POI_list,form):
 def gratification_sort(POI):
 	return grat_score_dict[POI]
 
+def get_lat(POI):
+	return POI.latitude
+
+def get_lng(POI):
+	return POI.longitude
+
 def tour_sort_key(POI):
 	return float(POI['time'])
 
@@ -55,7 +61,8 @@ def generate_itenerary(form):
 	
 	
 
-	cluster_list = tsp_POI_delegation(cluster_list)
+	#cluster_list = tsp_POI_delegation(cluster_list)
+	cluster_list = new_find_route(cluster_list)
 	# print(cluster_list[0])
 	output = itenerary_json(cluster_list,form)
 	#print(output)
@@ -76,6 +83,75 @@ def redistribute(cluster_list):
 		add = (float(half_day_time) - float(calculate_time(tour))) / float(len(tour))
 		extra_time_list.append(add)
 	return extra_time_list
+
+def new_find_route(cluster_list):
+	no_days = len(cluster_list)
+	sites_to_visit_list = [[]] * no_days
+	
+	for i in range(no_days):
+		print 'day {}'.format(i)
+		cluster_list[i].sort(key=gratification_sort, reverse=True)
+		print '		sorted cluster by grat score'
+		threshold = 15
+		print '		before : cluster has {} sites'.format(len(cluster_list[i]))
+		while len(cluster_list[i]) > threshold:
+			extra_poi = cluster_list[i].pop(-1)
+			if i < no_days-1:
+				cluster_list[i+1].append(extra_poi)
+		print '		cluster now has {} sites'.format(len(cluster_list[i]))
+
+		sites_to_visit_list[i] = reorder(cluster_list[i])
+		time = calculate_time(sites_to_visit_list[i])
+		while(time>half_day_time):
+			print 'time taken : {}'.format(time) 
+			POI_to_delegate = remove_site(sites_to_visit_list[i])				#removing the last element to fit the time inside half a day
+			if i < no_days-1 :
+				cluster_list[i+1].append(POI_to_delegate)
+			sites_to_visit_list[i] = reorder(sites_to_visit_list[i])
+			time = calculate_time(sites_to_visit_list[i])
+	
+	return sites_to_visit_list
+
+def remove_site(sites_list):
+	grat_scores = [grat_score_dict[x] for x in sites_list]
+	min_val = min(grat_scores)
+	index_min = grat_scores.index(min_val)
+	print 'removing site : '+ sites_list[index_min].POI_name
+	return sites_list.pop(index_min)
+
+def reorder(cluster):
+	print '		reorder'
+	bylat = copy.deepcopy(cluster)
+	bylatRev = copy.deepcopy(cluster)
+	bylng = copy.deepcopy(cluster)
+	bylngRev = copy.deepcopy(cluster)
+
+	bylat.sort(key=get_lat)
+	bylatRev.sort(key=get_lat,reverse=True)
+	bylng.sort(key=get_lng)
+	bylngRev.sort(key=get_lng,reverse=True)
+
+	times = [
+		calculate_time(bylat),
+		calculate_time(bylatRev),
+		calculate_time(bylng),
+		calculate_time(bylngRev)
+	]
+	sortedArrays = [
+		bylat,
+		bylatRev,
+		bylng,
+		bylngRev
+	]
+
+	sorted_times = sorted(times)
+	
+	for i in range(4):
+		if sorted_times[0] == times[i]:
+			return sortedArrays[i]
+
+	
+
 
 def tsp_POI_delegation(cluster_list):
 	no_days = len(cluster_list)
@@ -177,7 +253,8 @@ def POI_time(time):
 
 
 def modify_itenerary(tour,event_name,event_start,event_end):
-	start_day = datetime.datetime.strptime(tour['start_date'], "%Y-%m-%d").date()
+	start_day = tour['start_date'].split("T")[0];
+	start_day = datetime.datetime.strptime(start_day, "%Y-%m-%d").date()
 	# print tour
 	if not check_itenerary_consistency(tour,event_name,event_start,event_end):
 		return -1
@@ -241,6 +318,7 @@ def modify_itenerary(tour,event_name,event_start,event_end):
 
 	return tour
 
+
 def get_actual_time_difference(POI_first, POI_second, city_name):
 	POI_source = PointOfInterest.objects.filter(POI_city = city_name, POI_name = POI_first)
 	POI_dest = PointOfInterest.objects.filter(POI_city = city_name, POI_name = POI_second)
@@ -255,7 +333,8 @@ def get_actual_time_difference(POI_first, POI_second, city_name):
 
 
 def check_itenerary_consistency(tour,event_name,event_start,event_end):
-	start_day = datetime.datetime.strptime(tour['start_date'], "%Y-%m-%d").date()
+	start_day = tour['start_date'].split("T")[0];
+	start_day = datetime.datetime.strptime(start_day, "%Y-%m-%d").date()
 	# POI = get_POI_object(event_name,tour['city'])
 
 	for path_index in range(0,len(tour['tour'])):

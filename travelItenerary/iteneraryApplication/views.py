@@ -14,6 +14,7 @@ from get_POI import get_POIs, get_POI_object
 from django.http import Http404
 import datetime
 import dateutil.parser
+from LAplan import laPlan
 
 # Create your views here.
 plan = {}
@@ -416,6 +417,8 @@ def update_tour(request):
     plan = modify_itenerary(plan,event_name,event_start,event_end)
     if plan == -1:
         raise Http404("the change in event is not consistent")
+
+    plan = get_timetravel(get_no_ratings(correct_time_format(add_images_rating(plan))))
     plan = json.dumps(plan)
     # print plan
     return HttpResponse(plan)
@@ -430,7 +433,7 @@ def get_POI_all(request):
     
     return HttpResponse(json.dumps(POI_name_list))
     
-from LAplan import laPlan
+
 def show_map_test(request):
     return render(request , 'map.html' , {
         'plan' : json.dumps(laPlan['tour']),
