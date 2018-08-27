@@ -12,34 +12,34 @@ function checkWrongCity() {
 
 function showTypeOptions() {
     var x = document.getElementById("multiselectDropDown");
-    if (x.style.display === "none") {
-        x.style.display = "block";
+    if (x.style.visibility === "hidden") {
+        x.style.visibility = "visible";
     } else {
-        x.style.display = "none";
+        x.style.visibility = "hidden";
     }
 }
 
 
-jQuery.fn.multiselect = function() {
-    $(this).each(function() {
-        var checkboxes = $(this).find("input:checkbox");
-        checkboxes.each(function() {
-            var checkbox = $(this);
-            // Highlight pre-selected checkboxes
-            if (checkbox.prop("checked"))
-                checkbox.parent().addClass("multiselect-on");
+// jQuery.fn.multiselect = function() {
+//     $(this).each(function() {
+//         var checkboxes = $(this).find("input:checkbox");
+//         checkboxes.each(function() {
+//             var checkbox = $(this);
+//             // Highlight pre-selected checkboxes
+//             if (checkbox.prop("checked"))
+//                 checkbox.parent().addClass("multiselect-on");
  
-            // Highlight checkboxes that the user selects
-            checkbox.click(function() {
-                if (checkbox.prop("checked"))
-                    checkbox.parent().addClass("multiselect-on");
-                else
-                    checkbox.parent().removeClass("multiselect-on");
-            });
-        });
-    });
-};
+//             // Highlight checkboxes that the user selects
+//             checkbox.click(function() {
+//                 if (checkbox.prop("checked"))
+//                     checkbox.parent().addClass("multiselect-on");
+//                 else
+//                     checkbox.parent().removeClass("multiselect-on");
+//             });
+//         });
+//     });
+// };
 
-$(function() {
-     $(".multiselect").multiselect();
-});
+// $(function() {
+//      $(".multiselect").multiselect();
+// });

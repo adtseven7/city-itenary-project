@@ -235,6 +235,38 @@ plan = {}
 #     'no_days': 2
 # }
 
+type_mapping = {
+    "natural_feature": [1,2,5],
+    "museum": [2,5],
+    "night_club": [3],
+    "church": [2,4,5],
+    "place_of_worship": [2,4,5],
+    "art_gallery": [2],
+    "cemetery": [1,5],
+    "park": [1,8],
+    "shopping_mall": [6,8],
+    "aquarium": [1,8],
+    "amusement_park": [7,8],
+    "zoo": [1,8],
+    "cafe": [2,8],
+    "city_hall": [2,5],
+    "stadium": [5,8],
+    "mosque": [2,4,5],
+    "casino": [2,3,8],
+    "synagogue": [2,4,5] 
+}
+
+type_groups = [
+    "Nature",
+    "Art & Culture",
+    "Party/Night Life",
+    "Worship",
+    "Architecture",
+    "Shopping",
+    "Sports & Adventure",
+    "Entertainment"
+]
+
 
 def get_city_image(city):
     return "img/new_data/" + city + "/" + city + ".jpg"
@@ -349,13 +381,14 @@ def itenerary_form(request):
             context['end_date'] = dateutil.parser.parse(request.POST.get('dates').split('-')[1].strip())
             context['type_tags'] = []
             type_list = get_type_list()
-            
+            group_list = []
+
             for elem in type_list:
-                value = 'type-' + str(elem)
-                if request.POST.get(value) is not None:
-                    elem = elem.replace(" ", "_")
-                    print ">>>>", elem
-                    context['type_tags'].append(Type.objects.get(type_name=elem))
+                for mapping in type_mapping[elem]:
+                    value = 'type-' + str(type_groups[mapping-1])
+                    if request.POST.get(value) is not None:
+                        if Type.objects.get(type_name=elem) not in context['type_tags']:
+                            context['type_tags'].append(Type.objects.get(type_name=elem))
 
 
 
@@ -380,7 +413,7 @@ def itenerary_form(request):
         'form': form,
         'today_date': now,
         'city_list': city_list,
-        'type_list': type_list
+        'type_list': type_groups
         })
     # return render(request, html template page to return after form, params for form)
 

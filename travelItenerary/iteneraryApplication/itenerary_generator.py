@@ -59,7 +59,8 @@ def generate_itenerary(form):
 
 	for i in range(0,len(POI_list)):
 		cluster_list[kmeans.labels_[i]].append(POI_list[i])
-	
+
+
 	cluster_list = generate_order(cluster_list,kmeans.cluster_centers_, no_days)
 
 	cluster_list = tsp_POI_delegation(cluster_list)
@@ -159,14 +160,16 @@ def tsp_POI_delegation(cluster_list):
 	cluster_list_tsp = copy.deepcopy(cluster_list)
 	for i in range(0,no_days-1):
 		cluster_list[i].sort(key=gratification_sort, reverse=True)
+
 		# extra >>>>>>>
 		threshold = 15
 		#print ">>>>>>>>>>>", i, len(cluster_list[i])
 		for j in range(15, max(threshold, len(cluster_list[i]))):
 			extra_poi = cluster_list[i].pop(-1)
+			# print ">>>>>>>>>>>>>>>", extra_poi.POI_name
 			cluster_list[i+1].append(extra_poi)
 
-		print ">>>>>>>>>>>No day", i, cluster_list[i]
+		#print ">>>>>>>>>>>No day", i, cluster_list[i]
 		
 		# end >>>>>>>>>>
 		cluster_list_tsp[i] = tsp_solver(cluster_list[i])
@@ -174,22 +177,27 @@ def tsp_POI_delegation(cluster_list):
 		time = calculate_time(cluster_list_tsp[i])
 		while(time>half_day_time):
 			POI_to_delegate = cluster_list[i].pop(-1)				#removing the last element to fit the time inside half a day
+			# print ">>>>>>>>>>>>>>>", POI_to_delegate.POI_name
+
 			cluster_list[i+1].append(POI_to_delegate)
 			cluster_list_tsp[i] = tsp_solver(cluster_list[i])
 			time = calculate_time(cluster_list_tsp[i])
 
 	i = no_days-1
 	cluster_list[i].sort(key=gratification_sort, reverse=True)
+	for elem in cluster_list[0]:
+		print "----------", elem.POI_name, grat_score_dict[elem]
 
 	threshold = 15
 	for j in range(15, max(threshold, len(cluster_list[i]))):
 		extra_poi = cluster_list[i].pop(-1)
-
+		# print ">>>>>>>>>>>>>>>", extra_poi.POI_name
 
 	cluster_list_tsp[i] = tsp_solver(cluster_list[i])
 	time = calculate_time(cluster_list_tsp[i])
 	while(time>half_day_time):
 			# print "++++++++++++++++++++++", cluster_list[i][-1].POI_name
+
 			del cluster_list[i][-1]			#removing the last element to fit the time inside half a day
 			cluster_list_tsp[i] = tsp_solver(cluster_list[i])
 			time = calculate_time(cluster_list_tsp[i])

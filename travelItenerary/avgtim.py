@@ -14,6 +14,8 @@ for root, dirs, files in os.walk(os.path.abspath(os.path.join(os.getcwd(), os.pa
         if "avg_time" in file_name:
             with open(file_name) as data:
                 time = float(data.readlines()[0])
+                print time
+                '''
                 poi_name = os.path.dirname(file_name).split('/')[-1]
                 try:
                 	poi = PointOfInterest.objects.get(POI_name=poi_name)
@@ -22,5 +24,5 @@ for root, dirs, files in os.walk(os.path.abspath(os.path.join(os.getcwd(), os.pa
                 except:
                     pass
 
-                
+                '''
 

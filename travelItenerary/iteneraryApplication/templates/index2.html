@@ -78,16 +78,26 @@
       }
       .combo-label {margin-bottom:.5em;}
 
-      .input {
+      #city {
         width: 100%;
+        background-color: rgba(255,255,255,0.5);
       }
 
-      .multiselect {
-          width:70%;
+      #dates {
+        width: 100%;
+        background-color: rgba(255, 255, 255, 0.5);
+      }
+
+      #multiselectDropDown {
+          width:80%;
           height:5em;
           border:solid 1px #e6e6e6;
           overflow:auto;
           margin-bottom: 1em;
+          margin-left: 10%;
+          text-align: left;
+          background-color: rgba(255, 255, 255, 0.5);
+          color: rgb(0, 0, 0);
       }
        
     /*  .multiselect label {
@@ -154,18 +164,63 @@
         <div class="row">
           <div class="col-lg-10 mx-auto">
             <h1 class="text-uppercase">
-              <strong>We do basic itenerary planning</strong>
+              <strong>Itenerary planner</strong>
             </h1>
             <hr>
           </div>
           <div class="col-lg-8 mx-auto">
-            <p class="text-faded mb-5">This website allows you to create custom travel itenerary based on your preferences. On top of that, we don't store any data about you or your itenerary. So you can be assured that no one is tracking you! </p>
-            <a class="btn btn-primary btn-xl js-scroll-trigger" href="#about">Start Planning</a>
+          
+            <form method="post" class="form">
+              {% csrf_token %}
+              {% bootstrap_form form error_types='all'%}
+
+        <!-- 
+        change start -->
+              City<br/>
+              <input list="cities" name="city" id="city" autocomplete="off" style="width: 50%">
+              <datalist id="cities">
+                {% for city in city_list %}
+                  <option value="{{city}}"/>
+                {% endfor %}
+              </datalist><br/>
+              <div id="errorCity" class="alert alert-danger" style="width:50%; line-height: 5px; margin-left: 25%; visibility: hidden;">
+                <strong>Error!</strong> in the city
+              </div>
+
+              Date<br>
+              <input id="dates" name="dates" autocomplete="off" style="width: 50%"><br/><br/>
+              <a href="javascript:showTypeOptions()" style="color:#fff !important; ">Preferences</a>
+              <div id="multiselectDropDown" style="visibility: hidden;">
+                <table>
+                  <tr>
+                  {% for type in type_list %}
+                    <td>
+                      <input id="type-{{type}}" type="checkbox" name="type-{{type}}" value="yes">
+                      <label for="type-{{type}}">{{type}}</label>&nbsp;
+                    </td>
+                    {% if forloop.counter|divisibleby:4 %}
+                      </tr><tr>
+                    {% endif %}
+                  {% endfor %}
+                </tr>
+                </table>
+              </div>
+              <br>
+              <br>
+
+              <input type="submit" name="submit" value="Generate Itenerary" onclick="return checkWrongCity()" class="btn btn-primary btn-xl js-scroll-trigger" style="width: 50% !important">
+            </form>
+
+
+
+
+
+
           </div>
         </div>
       </div>
     </header>
-
+<!-- 
     <section id="services">
       <div class="container">
         <div class="row">
@@ -181,10 +236,10 @@
     <form style="margin-left:25%" method="post" class="form">
       {% csrf_token %}
       {% bootstrap_form form error_types='all'%}
-
+ -->
 <!-- 
 change start -->
-      City<br/>
+  <!--     City<br/>
       <input list="cities" name="city" id="city" autocomplete="off" style="width: 70%">
       <datalist id="cities">
         {% for city in city_list %}
@@ -209,7 +264,7 @@ change start -->
       <br>
 
       <input type="submit" name="submit" value="Generate Itenerary" onclick="return checkWrongCity()">
-
+ -->
       <!-- Date<br/>
       <input name="dates"><br/> -->
 <!-- 
@@ -220,9 +275,9 @@ change end -->
           {% bootstrap_icon "thumb" %} Submit
         </button>
       {% endbuttons %} -->
-    </form>
+   <!--  </form>
 
-
+ -->
 
 
     <script>
@@ -236,8 +291,8 @@ change end -->
       });
 
     </script>
-    </section>
-
+   <!--  </section>
+ -->
 
    <!--  <script>
     $(function() {

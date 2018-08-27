@@ -38,7 +38,7 @@ function loadTimeline(){
 				HTML.push('<div class="timeline-heading">')
 				HTML.push('<h4 class="subheading">' + PLAN['tour'][i][j]['name'] +'</h4>')
 				HTML.push('<h6>')
-				for(var k = 0;k<PLAN['tour'][i][j]['rating_len'];k++){
+				for(var k = 0;k<PLAN['tour'][i][j]['rating_len'].length;k++){
 					HTML.push('<span class="fa fa-star checked"></span>')
 				}
 				HTML.push(PLAN['tour'][i][j]['rating'] + '(' + PLAN['tour'][i][j]['no_of_ratings'] + ')')
@@ -104,7 +104,7 @@ function loadTimeline(){
 				HTML.push('<div class="timeline-heading">')
 				HTML.push('<h4 class="subheading">' + PLAN['tour'][i][j]['name'] +'</h4>')
 				HTML.push('<h6>')
-				for(var k = 0;k<PLAN['tour'][i][j]['rating_len'];k++){
+				for(var k = 0;k<PLAN['tour'][i][j]['rating_len'].length;k++){
 					HTML.push('<span class="fa fa-star checked"></span>')
 				}
 				HTML.push(PLAN['tour'][i][j]['rating'] + '(' + PLAN['tour'][i][j]['no_of_ratings'] + ')')
