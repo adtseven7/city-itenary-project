@@ -20,16 +20,26 @@ var colors = [
 ];
 var defaultLegendcolor = 'rgb(250, 140, 0)';
 
-// function yo(){
-//     console.log('yo');
-// }
+function onMapTabOpened(){
+    console.log('yo');
+    map_plan = JSON.parse(document.getElementById('plan_actual').value).tour
+   
+    recreateMapLegendElements();
+    hideMarkers();
+    createMarkers();
+    displayDate();
+    displayMapLegend();
+    displayRoute();
+
+
+}
 
 document.addEventListener("DOMContentLoaded", function(event) {
     curr_daynum = 0;
-    plan = JSON.parse(document.getElementById('plan').value);
+    map_plan = JSON.parse(document.getElementById('plan').value);
     start_date = new Date(document.getElementById('start_date').value);
     city = document.getElementById('city').value;
-    numDays = plan.length;
+    numDays = map_plan.length;
     
     createLeftPanel();
     setUpReactToTabClick();
@@ -37,10 +47,15 @@ document.addEventListener("DOMContentLoaded", function(event) {
     initMap();
 });
 
+function recreateMapLegendElements(){
+    let outerLegendDiv = $('.legend-day-list');
+    outerLegendDiv.empty();
+    addMapLegendElements();
+}
 function addMapLegendElements(){
     let outerLegendDiv = $('.legend-day-list');
     for(let daynum=0;daynum<numDays;daynum++){ 
-        let route = plan[daynum];
+        let route = map_plan[daynum];
         
         innerDayPlanHTML = "";
         for (let i = 0; i < route.length; i++) {
@@ -84,7 +99,7 @@ function createLeftPanel(){
     let dayListElem = $('#dayList');
     dayListElem.append('<div class="day-box in-plan active"><div class="day text-link">' + 1 + '</div></div>');
     
-    for (let i = 2; i <= plan.length; i++) {
+    for (let i = 2; i <= map_plan.length; i++) {
         dayListElem.append('<div class="day-box in-plan"><div class="day text-link">' + i + '</div></div>');
     }
     dayListElem.append('<div class="day-box in-plan" id="allTab"><div class="day text-link">All</div></div>');    
@@ -137,7 +152,7 @@ function displayRoute() {
     hideMarkers();
     directionsDisplay.setDirections({routes: []});
     
-    let route = plan[curr_daynum];
+    let route = map_plan[curr_daynum];
     if(route.length == 1){        
         showMarkers(curr_daynum);
         if(map.getZoom() > 11){
@@ -193,7 +208,7 @@ function centerMapOnCity(){
 function createMarkers(){
     // console.log('createMarkers');
     for(let daynum = 0;daynum<numDays;daynum ++){            
-        let route = plan[daynum];
+        let route = map_plan[daynum];
         let tmpMarkers = [];
         for(let i=0;i<route.length;i++){
             tmpMarkers[i] = new google.maps.Marker({
@@ -241,6 +256,7 @@ function showMarkersAll(){
 }
 
 function hideMarkers(){
+    console.log('hide markers');
     for(let daynum=0;daynum<numDays;daynum++){
         let tmpMarkers = markers[daynum];
         for(index in tmpMarkers){
@@ -273,7 +289,7 @@ function displayMapLegendAll(){
 
 
 function getTravelTime(daynum , sitenum){
-    return 'Travel for '+  plan[daynum][sitenum+1]['travel_time'] + ' mins';
+    return 'Travel for '+  map_plan[daynum][sitenum+1]['travel_time'] + ' mins';
 }
 function displayDate(){
     let daynum = curr_daynum;

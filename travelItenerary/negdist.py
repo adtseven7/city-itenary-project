@@ -23,6 +23,16 @@ for disttimObject in DistTime:
         distance = R * c * 1000
         #print lat1, lon1, '>', lat2, lon2, '=', distance
         disttimObject.distance = distance
+        disttimObject.time = distance / 666
         disttimObject.save()
+
+    time = disttimObject.time
+    newtime = time
+    if time < 5: 
+        newtime = 5
+    else:
+        newtime = 5*(time/5)
+    disttimObject.time = newtime
+    disttimObject.save()
 
 
