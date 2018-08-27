@@ -36,7 +36,7 @@ def tsp_solver(POI_list):
 
 
 	# Create routing model
-	if tsp_size > 0:
+	if tsp_size > 1:
 		routing = pywrapcp.RoutingModel(tsp_size, num_routes, depot)
 		search_parameters = pywrapcp.RoutingModel.DefaultSearchParameters()
 		# Create the distance callback.
@@ -59,13 +59,18 @@ def tsp_solver(POI_list):
 			print "route calculated"
 		else:
 			print 'No solution found.'
+	elif tsp_size == 1:
+		route.append(POI_list[0])
 	else:
 		print 'Specify an instance greater than 0.'
-	
+	print "printing route ABABABABBABABBABBBBABBAB"
+	print route
 	return route
 
 def calculate_time(path):
 	path_len = len(path)
+	print "Printing path length"
+	print path_len
 	time=0;
 	for i in range(0,path_len-1):
 		distance_to_next_object = DistanceTime.objects.filter(source = path[i], dest = path[i+1])

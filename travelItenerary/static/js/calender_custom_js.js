@@ -147,11 +147,11 @@ $(document).ready(function() {
                     addIteneraryButton: {
                       text: 'add site to itenerary',
                       click: function() {
-                        alert('clicked the custom button!');
+                        $('#addModal').modal({show:true});
                       }
                     }
-                  },
-                // header: { center: agendaItenerary},
+                },
+                header: { center: 'addIteneraryButton'},
                 schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
                 defaultView: 'agendaItenerary',
                 defaultDate: plan['start_date'],
@@ -274,7 +274,7 @@ $(document).ready(function() {
                 }
             });
 
-            $('#add_button').click(function(e) {
+            $('#addButton').click(function(e) {
                 e.preventDefault();
                 let POI_name = document.getElementById('addPOI').value;
                 if(eventExists(POI_name,event_list))

@@ -166,10 +166,11 @@ def tsp_POI_delegation(cluster_list):
 			extra_poi = cluster_list[i].pop(-1)
 			cluster_list[i+1].append(extra_poi)
 
-		#print ">>>>>>>>>>>", i, len(cluster_list[i])
+		print ">>>>>>>>>>>No day", i, cluster_list[i]
 		
 		# end >>>>>>>>>>
 		cluster_list_tsp[i] = tsp_solver(cluster_list[i])
+		# print len(cluster_list_tsp[i])
 		time = calculate_time(cluster_list_tsp[i])
 		while(time>half_day_time):
 			POI_to_delegate = cluster_list[i].pop(-1)				#removing the last element to fit the time inside half a day
@@ -180,15 +181,9 @@ def tsp_POI_delegation(cluster_list):
 	i = no_days-1
 	cluster_list[i].sort(key=gratification_sort, reverse=True)
 
-	# extra >>>>>>>
 	threshold = 15
-	#print ">>>>>>>>>>>", i, len(cluster_list[i])
 	for j in range(15, max(threshold, len(cluster_list[i]))):
 		extra_poi = cluster_list[i].pop(-1)
-
-	#print ">>>>>>>>>>>", i, len(cluster_list[i])
-
-	# end >>>>>>>>>>
 
 
 	cluster_list_tsp[i] = tsp_solver(cluster_list[i])
