@@ -14,8 +14,12 @@ function showTypeOptions() {
     var x = document.getElementById("multiselectDropDown");
     if (x.style.visibility === "hidden") {
         x.style.visibility = "visible";
+        var y = document.getElementById("changeArrow")
+        y.innerHTML = 'Preferences<span class="glyphicon glyphicon-chevron-up"></span>'
     } else {
         x.style.visibility = "hidden";
+        var y = document.getElementById("changeArrow")
+        y.innerHTML = 'Preferences<span class="glyphicon glyphicon-chevron-down"></span>'
     }
 }
 

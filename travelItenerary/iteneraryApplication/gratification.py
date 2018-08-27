@@ -29,5 +29,5 @@ def gratification_score(POI,form):
 		else:
 			grat_score+=not_matching_score
 
-	grat_score = calc_popularity(POI)
+	grat_score = math.log(grat_score) * calc_popularity(POI)
 	return grat_score

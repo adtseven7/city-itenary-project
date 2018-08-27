@@ -16,6 +16,7 @@
 
     <!-- Bootstrap core CSS -->
     <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+
     <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
   <!-- <link rel="stylesheet" href="/resources/demos/style.css"> -->
@@ -49,6 +50,9 @@
     <script src="{% static 'vendor/magnific-popup/jquery.magnific-popup.min.js' %}"></script>
     <script src="{% static 'js/index2.js' %}"></script>
 
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+
     <script type="text/javascript">
       $(function() {
 
@@ -80,12 +84,22 @@
 
       #city {
         width: 100%;
-        background-color: rgba(255,255,255,0.5);
+        background-color: rgba(255,255,255,0.6);
+        border-radius: 7px;
+        height: 40px;
+        border: none;
+        color: #000 !important;
+        font-size: 15px;
       }
 
       #dates {
         width: 100%;
-        background-color: rgba(255, 255, 255, 0.5);
+        border-radius: 7px;
+        background-color: rgba(255, 255, 255, 0.6);
+        height: 40px;
+        border: none;
+        color: #000;
+        font-size: 15px;
       }
 
       #multiselectDropDown {
@@ -96,8 +110,10 @@
           margin-bottom: 1em;
           margin-left: 10%;
           text-align: left;
-          background-color: rgba(255, 255, 255, 0.5);
-          color: rgb(0, 0, 0);
+          background-color: rgba(255, 255, 255, 0.6);
+          color: #000;
+          border-radius: 7px;
+          margin-top: 1em;
       }
        
     /*  .multiselect label {
@@ -114,6 +130,18 @@
         border: solid 1px #cccccc;
 
       }
+
+      label {
+        font-weight: 300 !important;
+      }
+
+      td {
+        margin-right: 20px !important; 
+      }
+      .form {
+/*        border: solid 1px #000000 !important;
+*//*        background-color: rgba(0, 0, 0, 0.5);
+*/      }
     </style>
 
 <!-- for date range
@@ -129,35 +157,16 @@
 
   </head>
 
-  <body id="page-top">
-
-    
-
+  <body id="page-top" style="font-family: Helvetica, Arial, sans-serif !important;">
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+    <!-- <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
       <div class="container">
         <a class="navbar-brand js-scroll-trigger" href="#page-top">Itenerary Planner</a>
         <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarResponsive">
-          <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="#about">About</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="#services">Services</a>
-            </li>
-            <!-- <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="#portfolio">Portfolio</a>
-            </li> -->
-            <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="#contact">Contact</a>
-            </li>
-          </ul>
-        </div>
       </div>
-    </nav>
+    </nav> -->
 
     <header class="masthead text-center text-white d-flex image">
       <div class="container my-auto">
@@ -171,13 +180,14 @@
           <div class="col-lg-8 mx-auto">
           
             <form method="post" class="form">
+              <br><br>
               {% csrf_token %}
               {% bootstrap_form form error_types='all'%}
 
         <!-- 
         change start -->
-              City<br/>
-              <input list="cities" name="city" id="city" autocomplete="off" style="width: 50%">
+<!--               City<br>
+ -->              <input list="cities" name="city" id="city" autocomplete="off" style="width: 50%;" placeholder="Enter City">
               <datalist id="cities">
                 {% for city in city_list %}
                   <option value="{{city}}"/>
@@ -186,12 +196,12 @@
               <div id="errorCity" class="alert alert-danger" style="width:50%; line-height: 5px; margin-left: 25%; visibility: hidden;">
                 <strong>Error!</strong> in the city
               </div>
-
-              Date<br>
-              <input id="dates" name="dates" autocomplete="off" style="width: 50%"><br/><br/>
-              <a href="javascript:showTypeOptions()" style="color:#fff !important; ">Preferences</a>
-              <div id="multiselectDropDown" style="visibility: hidden;">
-                <table>
+<!--               Date<br>
+ -->
+              <input id="dates" name="dates" autocomplete="off" placeholder="Enter Date" style="width: 50%"><br/><br/>
+              <a href="javascript:showTypeOptions()" style="text-decoration: none ;color:#4d4d4d !important;font-size: 17px; " id="changeArrow">Preferences<span class="glyphicon glyphicon-chevron-down"></span></a>
+              <div id="multiselectDropDown" style="visibility: hidden">
+                <table style="margin-left: 70px; margin-right: 20px">
                   <tr>
                   {% for type in type_list %}
                     <td>
@@ -209,6 +219,7 @@
               <br>
 
               <input type="submit" name="submit" value="Generate Itenerary" onclick="return checkWrongCity()" class="btn btn-primary btn-xl js-scroll-trigger" style="width: 50% !important">
+              <br><br>
             </form>
 
 
@@ -282,10 +293,8 @@ change end -->
 
     <script>
       $('input[name="dates"]').daterangepicker({
-          "startDate": "08/24/2018",
-          "endDate": "08/24/2018",
-          "minDate": "08/24/2018",
-          "maxDate": "09/24/2018"
+          "minDate": "08/27/2018",
+          "maxDate": "09/27/2018"
       }, function(start, end, label) {
         console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
       });
