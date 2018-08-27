@@ -83,7 +83,11 @@ def redistribute(cluster_list):
 	extra_time_list = []
 	for tour in cluster_list:
 		add = (float(half_day_time) - float(calculate_time(tour))) / float(len(tour))
-		extra_time_list.append(add)
+		minute_add = int(add * 60)
+		minute_add = 5*(minute_add/5)
+		add = float(minute_add/60.0)
+		extra_time_list.append(0)
+		print ">>>>>>>>>>>>>***********", add
 	return extra_time_list
 
 def new_find_route(cluster_list):
@@ -161,23 +165,16 @@ def tsp_POI_delegation(cluster_list):
 	for i in range(0,no_days-1):
 		cluster_list[i].sort(key=gratification_sort, reverse=True)
 
-		# extra >>>>>>>
 		threshold = 15
-		#print ">>>>>>>>>>>", i, len(cluster_list[i])
 		for j in range(15, max(threshold, len(cluster_list[i]))):
 			extra_poi = cluster_list[i].pop(-1)
-			# print ">>>>>>>>>>>>>>>", extra_poi.POI_name
 			cluster_list[i+1].append(extra_poi)
 
-		#print ">>>>>>>>>>>No day", i, cluster_list[i]
 		
-		# end >>>>>>>>>>
 		cluster_list_tsp[i] = tsp_solver(cluster_list[i])
-		# print len(cluster_list_tsp[i])
 		time = calculate_time(cluster_list_tsp[i])
 		while(time>half_day_time):
 			POI_to_delegate = cluster_list[i].pop(-1)				#removing the last element to fit the time inside half a day
-			# print ">>>>>>>>>>>>>>>", POI_to_delegate.POI_name
 
 			cluster_list[i+1].append(POI_to_delegate)
 			cluster_list_tsp[i] = tsp_solver(cluster_list[i])
@@ -185,18 +182,16 @@ def tsp_POI_delegation(cluster_list):
 
 	i = no_days-1
 	cluster_list[i].sort(key=gratification_sort, reverse=True)
-	for elem in cluster_list[0]:
-		print "----------", elem.POI_name, grat_score_dict[elem]
+	# for elem in cluster_list[0]:
+	# 	print "----------", elem.POI_name, grat_score_dict[elem]
 
 	threshold = 15
 	for j in range(15, max(threshold, len(cluster_list[i]))):
 		extra_poi = cluster_list[i].pop(-1)
-		# print ">>>>>>>>>>>>>>>", extra_poi.POI_name
 
 	cluster_list_tsp[i] = tsp_solver(cluster_list[i])
 	time = calculate_time(cluster_list_tsp[i])
 	while(time>half_day_time):
-			# print "++++++++++++++++++++++", cluster_list[i][-1].POI_name
 
 			del cluster_list[i][-1]			#removing the last element to fit the time inside half a day
 			cluster_list_tsp[i] = tsp_solver(cluster_list[i])
@@ -227,7 +222,7 @@ def itenerary_json(cluster_list,form):
 			POI_json['place_id'] = POI.POI_id
 			POI_json['rating'] = POI.rating
 			POI_json['description'] = POI.description
-			POI_json['time'] = float(calculate_time_upto(POI,path)) + (multiply * extra_time_list[ct])
+			POI_json['time'] = float(calculate_time_upto(POI,path))
 			POI_json['time_spent'] = float(PointOfInterest.objects.get(POI_id = POI.POI_id).average_time_spent) + float(extra_time_list[ct])
 			POI_json['cost'] = 10
 			path_json.append(POI_json)

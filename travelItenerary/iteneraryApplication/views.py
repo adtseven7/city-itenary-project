@@ -15,6 +15,7 @@ from django.http import Http404
 import datetime
 import dateutil.parser
 from LAplan import laPlan
+import math
 
 # Create your views here.
 plan = {}
@@ -288,7 +289,7 @@ def add_images_rating(given_plan):
 
 def am_pm(value):
     hr = int(value)
-    mn = int((value*60) % 60)
+    mn = int(round((value*60) % 60))
     mn = mn
     if hr > 12:
         if mn < 10: return str(hr-12) + " : 0" + str(mn) + " pm"

@@ -19,7 +19,7 @@ function loadTimeline(){
 		let DAY_LENGTH = PLAN['tour'][i].length
 		for(var j=0;j<DAY_LENGTH;j++){
 			HTML.push('<li class="timeline">')
-			HTML.push('<h3 class="section-subheading text-muted" align="center">')
+			HTML.push('<h5 class="section-subheading text-muted" align="center"><i>')
 			HTML.push('<br/><br/><br/><br/>')
 			if(j == 0){
 				HTML.push('Start')
@@ -27,9 +27,9 @@ function loadTimeline(){
 			else{
 				HTML.push(PLAN['tour'][i][j]['travel_dist'] + 'Km (' + PLAN['tour'][i][j]['travel_time'] + 'mins)')
 			}
-			HTML.push('</h3>')
+			HTML.push('</i></h5>')
 			HTML.push('</li>')
-			if(j%2 == 0){
+			if(j%2 == 1){
 				HTML.push('<li class="timeline-inverted">')
 				HTML.push('<div class="timeline-image">')
 				HTML.push('<img class="rounded-circle img-fluid" src="/static/' + PLAN['tour'][i][j]['images'][0] + '" alt="">')

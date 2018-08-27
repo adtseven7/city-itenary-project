@@ -21,7 +21,7 @@ def create_distance_matrix(POI_list):
 				dist_matrix[i][j] = 0
 			else:
 				distance_i_to_j_object = DistanceTime.objects.filter(source = POI_list[i-1], dest = POI_list[j-1])
-				dist_matrix[i][j] = Decimal(float(distance_i_to_j_object[0].distance)/60.0)
+				dist_matrix[i][j] = Decimal(float(distance_i_to_j_object[0].distance))
 	return dist_matrix
 
 
@@ -45,7 +45,7 @@ def tsp_solver(POI_list):
 		assignment = routing.SolveWithParameters(search_parameters)		# Solve the problem.
 		if assignment:
 	    	# Solution distance.
-			print "Total time: " + str(assignment.ObjectiveValue()) + " minutes\n"
+			# print "Total time: " + str(assignment.ObjectiveValue()) + " minutes\n"
 	    	# Display the solution.
 	    	# Only one route here; otherwise iterate from 0 to routing.vehicles() - 1
 			route_number = 0
@@ -56,21 +56,21 @@ def tsp_solver(POI_list):
 				route.append(POI_list[routing.IndexToNode(index) - 1])
 				index = assignment.Value(routing.NextVar(index))
 	    	# route.append(POI_list[routing.IndexToNode(index)])
-			print "route calculated"
+			# print "route calculated"
 		else:
 			print 'No solution found.'
 	elif tsp_size == 1:
 		route.append(POI_list[0])
 	else:
 		print 'Specify an instance greater than 0.'
-	print "printing route ABABABABBABABBABBBBABBAB"
-	print route
+	# print "printing route ABABABABBABABBABBBBABBAB"
+	# print route
 	return route
 
 def calculate_time(path):
 	path_len = len(path)
-	print "Printing path length"
-	print path_len
+	# print "Printing path length"
+	# print path_len
 	time=0;
 	for i in range(0,path_len-1):
 		distance_to_next_object = DistanceTime.objects.filter(source = path[i], dest = path[i+1])
