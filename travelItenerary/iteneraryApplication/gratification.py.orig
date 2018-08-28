@@ -32,7 +32,11 @@ def gratification_score(POI,form):
 		else:
 			grat_score+=not_matching_score
 
-	grat_score = math.log(grat_score)*calc_popularity(POI)
+<<<<<<< Updated upstream
+	grat_score = math.log(grat_score) * calc_popularity(POI)
+	return grat_score
+=======
+	grat_score = math.log10(grat_score)*calc_popularity(POI)
 	return float(grat_score)
 
 def lat_lng_distance(point1,point2):
@@ -76,3 +80,4 @@ def calculate_cluster_center(cluster_list):
 	centroid[1]/n
 	return tuple(centroid)
 	
+>>>>>>> Stashed changes

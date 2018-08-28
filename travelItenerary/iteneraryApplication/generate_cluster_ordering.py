@@ -37,7 +37,9 @@ def generate_order(cluster_list,cluster_centroids, no_clusters):
 	first_cluster = cluster_centroids[current_cluster_index]
 	visited_list = np.zeros(no_clusters)
 	cluster_list_fin = []
+	cluster_centroid_fin = []
 	cluster_list_fin.append(cluster_list[current_cluster_index])
+	cluster_centroid_fin.append(cluster_centroids[current_cluster_index])
 	visited_list[current_cluster_index] = 1
 	
 
@@ -45,8 +47,9 @@ def generate_order(cluster_list,cluster_centroids, no_clusters):
 		index = closest_unvisited_cluster_index(cluster_centroids[current_cluster_index],cluster_centroids,visited_list)
 		current_cluster_index = index
 		cluster_list_fin.append(cluster_list[index])
+		cluster_centroid_fin.append(cluster_centroids[index])
 		visited_list[index] = 1
 
-	return cluster_list_fin
+	return (cluster_list_fin, cluster_centroid_fin)
 
 

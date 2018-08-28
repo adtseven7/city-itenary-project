@@ -462,8 +462,8 @@ def get_POI_all(request):
     POI_list = get_POIs(city)
     POI_name_list = []
     for POI in POI_list:
-       POI_name_list.append(POI.POI_name.encode('ascii','ignore'))
-    print POI_name_list
+       POI_name_list.append(POI.POI_name)
+    # print POI_name_list
     
     return HttpResponse(json.dumps(POI_name_list))
     
