@@ -6,7 +6,7 @@ from heapq import nsmallest
 
 R = 6373.0
 not_matching_score = 10
-matching_score = 100
+matching_score = 50
 
 def p_mean(rating):
 	return max(0.0, float(rating)/5.0)
@@ -32,7 +32,7 @@ def gratification_score(POI,form):
 		else:
 			grat_score+=not_matching_score
 
-	grat_score = math.log(grat_score)*calc_popularity(POI)
+	grat_score = math.log(grat_score)*calc_popularity(POI)*3
 	return float(grat_score)
 
 def lat_lng_distance(point1,point2):
@@ -54,7 +54,7 @@ def dist_gratification(grat_score, POI, cluster_centroid):
 	lat = POI.latitude
 	lng = POI.longitude
 	distance = lat_lng_distance((lat,lng),cluster_centroid)
-	return grat_score*math.exp(-1*distance)
+	return grat_score*math.exp(0*distance)
 
 
 def dist_gratification_k_closest(grat_score,POI,cluster,k):

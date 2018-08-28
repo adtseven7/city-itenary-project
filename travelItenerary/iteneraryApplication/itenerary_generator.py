@@ -8,7 +8,9 @@ from django.core.serializers.json import DjangoJSONEncoder
 import math
 from .get_POI import get_POI_object
 from .generate_cluster_ordering import generate_order
-half_day_time = 12
+half_day_time = 10.0
+trip_time_start = 10.0
+threshold = 12
 
 grat_score_dict = dict()
 
@@ -47,8 +49,16 @@ def generate_itenerary(form):
 	end_date = form['end_date']
 
 	no_days = (end_date - start_date).days + 1
-	POI_list = PointOfInterest.objects.filter(POI_city = city)
+	POI_list = []
+	POI_querySet = PointOfInterest.objects.filter(POI_city = city)
+	for POI in POI_querySet:
+		POI_list.append(POI)
 	generate_gratification_score_all(POI_list,form)
+	POI_list.sort(key=gratification_sort, reverse=True)
+
+	while(len(POI_list) >= threshold*no_days):
+		# print POI_list[-1]
+		del POI_list[-1]
 	kmeans = kMeanClustering(POI_list,no_days)
 	
 	cluster_list = []
@@ -61,8 +71,8 @@ def generate_itenerary(form):
 
 	cluster_centroids = []
 	(cluster_list,cluster_centroids) = generate_order(cluster_list,kmeans.cluster_centers_, no_days)
-	print ">>>>>>>>>>><<<<<<<<<<<<>>>>>>>>><<<<<<<<<<<<"
-	print cluster_centroids
+	# print ">>>>>>>>>>><<<<<<<<<<<<>>>>>>>>><<<<<<<<<<<<"
+	# print cluster_centroids
 	cluster_list = tsp_POI_delegation(cluster_list,cluster_centroids)
 	#cluster_list = new_find_route(cluster_list)
 	# print(cluster_list[0])
@@ -87,7 +97,7 @@ def redistribute(cluster_list):
 		minute_add = 5*(minute_add/5)
 		add = float(minute_add/60.0)
 		extra_time_list.append(0)
-		print ">>>>>>>>>>>>>***********", add
+		# print ">>>>>>>>>>>>>***********", add
 	return extra_time_list
 
 # def new_find_route(cluster_list):
@@ -158,10 +168,14 @@ def tsp_POI_delegation(cluster_list,cluster_list_centroids):
 	cluster_list_tsp = copy.deepcopy(cluster_list)
 	for i in range(0,no_days-1):
 
+		for POI in cluster_list[i]:
+			grat_score_dict[POI] = dist_gratification(grat_score_dict[POI],POI,cluster_list_centroids[i])
+
 		cluster_list[i].sort(key=gratification_sort, reverse=True)
 
-		threshold = 12
-		for j in range(12, max(threshold, len(cluster_list[i]))):
+		
+		
+		while(len(cluster_list[i]) >= threshold):
 			extra_poi = cluster_list[i].pop(-1)
 			cluster_list[i+1].append(extra_poi)
 
@@ -170,8 +184,8 @@ def tsp_POI_delegation(cluster_list,cluster_list_centroids):
 		time = calculate_time(cluster_list_tsp[i])
 		while(time>half_day_time):
 			for POI in cluster_list[i]:
-				# grat_score_dict[POI] = dist_gratification(grat_score_dict[POI],POI,cluster_list_centroids[i])
-				grat_score_dict[POI] = dist_gratification_k_closest(grat_score_dict[POI],POI,cluster_list[i],2)
+				grat_score_dict[POI] = dist_gratification(grat_score_dict[POI],POI,cluster_list_centroids[i])
+				# grat_score_dict[POI] = dist_gratification_k_closest(grat_score_dict[POI],POI,cluster_list[i],2)
 				# print POI, " gratification ", grat_score_dict[POI]					
 			POI_to_delegate = cluster_list[i].pop(-1)				#removing the last element to fit the time inside half a day
 
@@ -181,16 +195,18 @@ def tsp_POI_delegation(cluster_list,cluster_list_centroids):
 			cluster_list_centroids[i] = calculate_cluster_center(cluster_list[i])
 
 	i = no_days-1
-	for POI in cluster_list[i]:
-		# grat_score_dict[POI] = dist_gratification(grat_score_dict[POI],POI,cluster_list_centroids[i])
-		grat_score_dict[POI] = dist_gratification_k_closest(grat_score_dict[POI],POI,cluster_list[i],2)					#choose from either line 158 or line 157 to take into account distance for gratification score
-	cluster_list[i].sort(key=gratification_sort, reverse=True)
+	
 	# for elem in cluster_list[0]:
 	# 	print "----------", elem.POI_name, grat_score_dict[elem]
 
-	threshold = 12
-	for j in range(12, max(threshold, len(cluster_list[i]))):
-		extra_poi = cluster_list[i].pop(-1)
+	for POI in cluster_list[i]:
+		grat_score_dict[POI] = dist_gratification(grat_score_dict[POI],POI,cluster_list_centroids[i])
+
+	cluster_list[i].sort(key=gratification_sort, reverse=True)
+
+	while(len(cluster_list[i]) >= threshold):
+		# print cluster_list[i][-1]
+		cluster_list[i].pop(-1)
 
 	cluster_list_tsp[i] = tsp_solver(cluster_list[i])
 	time = calculate_time(cluster_list_tsp[i])
@@ -200,6 +216,7 @@ def tsp_POI_delegation(cluster_list,cluster_list_centroids):
 			# print POI, " gratification ", grat_score_dict[POI]	
 			# grat_score_dict[POI] = dist_gratification_k_closest(grat_score_dict[POI],POI,cluster_list[i],2)
 			# print "++++++++++++++++++++++", cluster_list[i][-1].POI_name
+		# print cluster_list[i][-1]
 		del cluster_list[i][-1]			#removing the last element to fit the time inside half a day
 		cluster_list_tsp[i] = tsp_solver(cluster_list[i])
 		time = calculate_time(cluster_list_tsp[i])
@@ -209,7 +226,7 @@ def tsp_POI_delegation(cluster_list,cluster_list_centroids):
 
 
 def itenerary_json(cluster_list,form):
-	extra_time_list = redistribute(cluster_list)
+	# extra_time_list = redistribute(cluster_list)
 	json_output={}
 	city = form['city']
 	start_date = form['start_date']
@@ -231,7 +248,7 @@ def itenerary_json(cluster_list,form):
 			POI_json['rating'] = POI.rating
 			POI_json['description'] = POI.description
 			POI_json['time'] = float(calculate_time_upto(POI,path))
-			POI_json['time_spent'] = float(PointOfInterest.objects.get(POI_id = POI.POI_id).average_time_spent) + float(extra_time_list[ct])
+			POI_json['time_spent'] = float(PointOfInterest.objects.get(POI_id = POI.POI_id).average_time_spent)
 			POI_json['cost'] = 10
 			path_json.append(POI_json)
 			multiply += 1
@@ -254,7 +271,7 @@ def time_difference(start_time,end_time):
 
 def POI_time(time):
 	output = 0;
-	output+=(time.hour - 9.0)
+	output+=(time.hour - trip_time_start)
 	output+=time.minute/60.0
 	return float(output)
 
@@ -306,7 +323,7 @@ def modify_itenerary(tour,event_name,event_start,event_end):
 		# print time_diff
 		POI_obj_json['time_spent'] = time_diff
 		# print POI['time']
-		POI_obj_json['time'] = float(start_time.hour + start_time.minute/60.0 - 9.0)
+		POI_obj_json['time'] = float(start_time.hour + start_time.minute/60.0 - trip_time_start)
 		# print POI['time']
 		tour['tour'][(date_travel - start_day).days].append(POI_obj_json)
 

@@ -17,6 +17,8 @@ import dateutil.parser
 from LAplan import laPlan
 import math
 
+trip_start_time = 10.0
+
 # Create your views here.
 plan = {}
 # plan = {
@@ -310,8 +312,8 @@ def get_city_description(city_name):
 
 def get_time_string(start, duration):
     time_string = ""
-    time_string += am_pm(start + 9.00) + " to "
-    time_string += am_pm(start + 9.00 + duration) 
+    time_string += am_pm(start + trip_start_time) + " to "
+    time_string += am_pm(start + trip_start_time + duration) 
     return time_string
 
 def correct_time_format(given_plan):

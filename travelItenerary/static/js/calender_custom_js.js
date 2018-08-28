@@ -26,6 +26,8 @@ function getEvent(event_title, event_list){
     return -1;
 }
 
+trip_start_time = 10.0
+
 function createEventList(plan){
     let event_list = [];
     for(day=0; day<plan['tour'].length; day++){
@@ -37,7 +39,7 @@ function createEventList(plan){
             POI_end_date.setDate(POI_end_date.getDate() + day);
 
             let POI = plan['tour'][day][j];
-            let visit_time = parseFloat(POI['time'])+9.0;
+            let visit_time = parseFloat(POI['time'])+trip_start_time;
             let start_hour = getHour(visit_time);
             let start_min = getMinutes(visit_time);
             POI_start_date.setHours(start_hour);
@@ -155,6 +157,7 @@ $(document).ready(function() {
                 schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
                 defaultView: 'agendaItenerary',
                 defaultDate: plan['start_date'],
+                firstDay: new Date(parseInt(plan['start_date'].split("-")[0],10), parseInt(plan['start_date'].split("-")[1] - 1,10), parseInt(plan['start_date'].split("-")[2].split("T")[0],10)).getDay(),
                 events: event_list,
                 eventResize: function(event, delta, revertFunc) {
                     
@@ -175,6 +178,7 @@ $(document).ready(function() {
                             // console.log(data);
                             plan = data;
                             document.getElementById('plan_actual').value = JSON.stringify(plan);
+                            console.log(document.getElementById('plan_actual').value);
                         },
                         error: function (data) {
                             alert("conflict found. reverting");
@@ -203,6 +207,8 @@ $(document).ready(function() {
                             // console.log(data);
                             plan = data;
                             document.getElementById('plan_actual').value = JSON.stringify(plan);
+                            console.log(document.getElementById('plan_actual').value);
+                            console.log(document.getElementById('plan_actual').value);
                             // console.log(plan);
                         },
                         error: function (data) {
@@ -245,6 +251,7 @@ $(document).ready(function() {
                                 // console.log(data);
                                 plan = data;
                                 document.getElementById('plan_actual').value = JSON.stringify(plan);
+                                console.log(document.getElementById('plan_actual').value);
                             }
                         });
                     }
@@ -302,6 +309,7 @@ $(document).ready(function() {
                             // console.log(event_list);
                             plan = data;
                             document.getElementById('plan_actual').value = JSON.stringify(plan);
+                            console.log(document.getElementById('plan_actual').value);
                         },
                         error: function (data) {
                             alert("conflict found. reverting");
@@ -328,7 +336,7 @@ $(document).ready(function() {
                plan = remove_POI_from_plan(plan,event_title);
                // console.log(plan);
                document.getElementById('plan_actual').value = JSON.stringify(plan);
-               // console.log(document.getElementById('plan_actual').value);
+               console.log(document.getElementById('plan_actual').value);
 
             });
         });
