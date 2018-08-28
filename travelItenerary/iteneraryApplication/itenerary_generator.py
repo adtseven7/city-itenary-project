@@ -49,22 +49,23 @@ def generate_itenerary(form):
 	no_days = (end_date - start_date).days + 1
 	POI_list = PointOfInterest.objects.filter(POI_city = city)
 	generate_gratification_score_all(POI_list,form)
-	kmeans = kMeanClustering(POI_list,no_days)
-	print kmeans.cluster_centers_
+	cluster_list = generate_itenerary_greedy(POI_list, form)
+	# kmeans = kMeanClustering(POI_list,no_days)
+	# print kmeans.cluster_centers_
 	
-	cluster_list = []
+	# cluster_list = []
 
-	for i in range(0,no_days):
-		cluster_list.append([])
+	# for i in range(0,no_days):
+	# 	cluster_list.append([])
 
-	for i in range(0,len(POI_list)):
-		cluster_list[kmeans.labels_[i]].append(POI_list[i])
+	# for i in range(0,len(POI_list)):
+	# 	cluster_list[kmeans.labels_[i]].append(POI_list[i])
 
 
-	cluster_list = generate_order(cluster_list,kmeans.cluster_centers_, no_days)
+	# cluster_list = generate_order(cluster_list,kmeans.cluster_centers_, no_days)
 
-	cluster_list = tsp_POI_delegation(cluster_list)
-	#cluster_list = new_find_route(cluster_list)
+	# cluster_list = tsp_POI_delegation(cluster_list)
+	# #cluster_list = new_find_route(cluster_list)
 	# print(cluster_list[0])
 	output = itenerary_json(cluster_list,form)
 	#print(output)
@@ -321,10 +322,10 @@ def modify_itenerary(tour,event_name,event_start,event_end):
 def get_actual_time_difference(POI_first, POI_second, city_name):
 	POI_source = PointOfInterest.objects.filter(POI_city = city_name, POI_name = POI_first)
 	POI_dest = PointOfInterest.objects.filter(POI_city = city_name, POI_name = POI_second)
-	print POI_source[0]
-	print "ASDASDASDASD<>><><><<><><<><><><><><><><"
-	print POI_second
-	print POI_dest
+	# print POI_source[0]
+	# print "ASDASDASDASD<>><><><<><><<><><><><><><><"
+	# print POI_second
+	# print POI_dest
 	Distance_time_object = DistanceTime.objects.filter(source = POI_source[0], dest = POI_dest[0])
 	time_diff = Distance_time_object[0].time
 	return float(time_diff)/60.0
@@ -380,6 +381,96 @@ def check_itenerary_consistency(tour,event_name,event_start,event_end):
 					return True
 				return False
 
-	return True			
+	return True		
+
+
+def value_function(grat_score, distance):
+	#print ";;;;;;;;;;", grat_score, distance
+	grat_score = float(grat_score)
+	distance = float(distance)/1000.0
+	return (grat_score**2) * math.exp(-distance/5.0)
+
+
+def generate_itenerary_greedy(POI_list, form):
+	city = form['city']
+	start_date = form['start_date']
+	end_date = form['end_date']
+
+	no_days = (end_date - start_date).days + 1
+	POI_query_list = PointOfInterest.objects.filter(POI_city = city)
+	generate_gratification_score_all(POI_list,form)
+	POI_list = []
+	for i in range(0, len(POI_query_list)):
+		POI_list.append(POI_query_list[i])
+	POI_list.sort(key=gratification_sort, reverse=True)
+	# for i in range(10*no_days, len(POI_query_list)):
+	# 	POI_list.pop()
+	for elem in POI_list:
+		print elem.POI_name, grat_score_dict[elem]
+	visited = {}
+
+	cluster_list = []
+	no_days = (end_date - start_date).days + 1
+	cur = 0
+	final_path = []
+	for day in range(1, no_days + 1):
+		start = cur
+		path = []
+		time = 9.0 * 60.0
+		while True:
+			if POI_list[start] not in visited.keys():
+				break
+			start += 1
+		path.append(POI_list[start])
+		visited[POI_list[start]] = 1
+		time += float(POI_list[start].average_time_spent) * 60.0
+		pretime = time
+		start_time = 9.0 * 60.0
+		total_time = 9.0 * 60.0
+		while True:
+			if time - start_time > total_time:
+				break
+			value = -1000000000.0
+			next_start = start + 1
+			for i in range(0, len(POI_list)):
+				if i == start:
+					continue
+				other_poi = POI_list[i]
+				if other_poi in visited.keys():
+					continue
+				other_value = value_function(grat_score_dict[other_poi], DistanceTime.objects.get(source = POI_list[start], dest = other_poi).distance)
+
+				if other_value > value:
+					time = pretime + DistanceTime.objects.get(source = POI_list[start], dest = other_poi).time + (float(other_poi.average_time_spent) * 60.0)
+					if time - start_time > total_time:
+						time = pretime
+						continue
+					next_poi = other_poi
+					value = other_value
+					next_start = i
+
+			if(value == -1000000000.0):
+				break
+			# print ":::::::::::", next_poi.POI_name, time
+
+			path.append(next_poi)
+			visited[next_poi] = 1
+			pretime = time
+			start = next_start
+
+		final_path.append(path)
+		for j in range(cur+1, len(POI_list)):
+			if POI_list[j] not in visited.keys():
+				cur = j
+				break
+
+	return final_path
+
+
+
+
+
+
+
 
 

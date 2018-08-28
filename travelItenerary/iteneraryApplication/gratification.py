@@ -9,6 +9,11 @@ def p_mean(rating):
 	return max(0.0, float(rating)/5.0)
 
 def calc_popularity(POI):
+	x = 4.0
+	y = 10000
+	return ((float(POI.rating) * float(POI.no_people_who_rated) + x * y) / (float(POI.no_people_who_rated) + y))**2
+
+
 	z_score = st.norm.ppf(0.995)
 	p = p_mean(POI.rating)
 	n = POI.no_people_who_rated
