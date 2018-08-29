@@ -160,8 +160,7 @@ $(document).ready(function() {
                 firstDay: new Date(parseInt(plan['start_date'].split("-")[0],10), parseInt(plan['start_date'].split("-")[1] - 1,10), parseInt(plan['start_date'].split("-")[2].split("T")[0],10)).getDay(),
                 events: event_list,
                 eventResize: function(event, delta, revertFunc) {
-                    
-                    alert(event.title + " end is now " + event.end.format());
+
                     $.ajax({
                         type: 'POST',
                         url: '/iteneraryApplication/ajax/update_tour/',
@@ -181,7 +180,7 @@ $(document).ready(function() {
                             console.log(document.getElementById('plan_actual').value);
                         },
                         error: function (data) {
-                            alert("conflict found. reverting");
+                            swal("conflict found. reverting");
                             revertFunc();
                         }
                     });
@@ -189,8 +188,6 @@ $(document).ready(function() {
                 },
                 eventDrop: function(event, delta, revertFunc) {
                     // console.log(event);
-
-                    alert(event.title + " was dropped on " + event.start.format());
                     $.ajax({
                         type: 'POST',
                         url: '/iteneraryApplication/ajax/update_tour/',
@@ -212,7 +209,7 @@ $(document).ready(function() {
                             // console.log(plan);
                         },
                         error: function (data) {
-                            alert("conflict found. reverting");
+                            swal("conflict found. reverting");
                             revertFunc();
                         }
                     });
@@ -258,7 +255,6 @@ $(document).ready(function() {
                 },
 
                 eventClick: function(calEvent, jsEvent, view) {
-                    alert("model should show");
                     $('#infoModal').on('show.bs.modal', function (event) {
                        $(this).find('h4.modal-title').text(calEvent.title);
                     });
@@ -285,7 +281,7 @@ $(document).ready(function() {
                 e.preventDefault();
                 let POI_name = document.getElementById('addPOI').value;
                 if(eventExists(POI_name,event_list))
-                    alert("The place already exists in your itenerary");
+                    swal("The place already exists in your itenerary");
 
                 else{
                     let event_to_add = getEventObject(POI_name,plan['start_date']);
@@ -312,7 +308,7 @@ $(document).ready(function() {
                             console.log(document.getElementById('plan_actual').value);
                         },
                         error: function (data) {
-                            alert("conflict found. reverting");
+                            swal("conflict found. reverting");
                             // revertFunc();
                         }
                     });

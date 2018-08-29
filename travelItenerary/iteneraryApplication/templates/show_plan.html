@@ -44,8 +44,8 @@
   <link rel="stylesheet" href="{% static 'css/show_plan.css' %}">
   <script src="{% static 'js/generate_plan_timeline.js' %}"></script>
   <script src="{% static 'js/show_plan.js' %}"></script>
-<!--   <script src="{% static 'js/generate_plan_timeline.js' %}"></script>
- -->  <style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
+  <style>
     .imagebackgroundcity {
       background-image: url("{% static city_image %}") !important;
     }
@@ -71,7 +71,7 @@
   </style>
 </head>
 
-<body onload="openTab(event, 'Timeline')">
+<body onload="openTab(event, 'Map')">
   {% csrf_token %}
   <input type="hidden" id="plan" name="variable" value="{{ tour_dump }}" >
   <input type="text" id="plan_actual" name="variable" value="{{ plan_dump }}" style="visibility: hidden" >
@@ -87,8 +87,8 @@
       <div class="collapse navbar-collapse justify-content-end">
         <div class="tab">
           <a href="/iteneraryApplication/form">Home</a>
-          <a onclick="openTab(event, 'Timeline')" href="#Timeline">Timeline</a>
           <a onclick="openTab(event, 'Map')" href="#Map">Map</a>
+          <a onclick="openTab(event, 'Timeline')" href="#Timeline">Timeline</a>
           <a onclick="openTab(event, 'Calender')" href="#Calender">Calender</a>
         </div>
       </div>

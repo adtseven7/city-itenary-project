@@ -95,11 +95,11 @@ def generate_itenerary(form):
 	for POI in POI_querySet:
 		POI_list.append(POI)
 
-	print POI_list[1].average_time_spent
+	# print POI_list[1].average_time_spent
 	for i in range(0,len(POI_list)):
 		modify_time_to_spend(POI_list[i],no_days)
 
-	print POI_list[1].average_time_spent
+	# print POI_list[1].average_time_spent
 
 	generate_gratification_score_all(POI_list,form)
 	POI_list.sort(key=gratification_sort, reverse=True)
@@ -332,6 +332,9 @@ def modify_itenerary(tour,event_name,event_start,event_end):
 	# print tour
 	if not check_itenerary_consistency(tour,event_name,event_start,event_end):
 		return -1
+
+	print "check itenerary passed"
+
 	POI_is_present = False
 	for i in range(0, len(tour['tour'])):
 		path = tour['tour'][i]
@@ -385,7 +388,7 @@ def modify_itenerary(tour,event_name,event_start,event_end):
 			if i==0:
 				path[i]['travel_time'] = 0;
 			else:
-				timeDiff = float(path[i]['time']) - float(path[i-1]['time']) - path[i-1]['time_spent']
+				timeDiff = float(path[i]['time']) - float(path[i-1]['time']) - float(path[i-1]['time_spent'])
 				path[i]['travel_time'] = math.floor(timeDiff*60)
 
 	return tour
@@ -394,7 +397,7 @@ def modify_itenerary(tour,event_name,event_start,event_end):
 def get_actual_time_difference(POI_first, POI_second, city_name):
 	POI_source = PointOfInterest.objects.filter(POI_city = city_name, POI_name = POI_first)
 	POI_dest = PointOfInterest.objects.filter(POI_city = city_name, POI_name = POI_second)
-	print "ASDASDASDASD<>><><><<><><<><><><><><><><"
+	# print "ASDASDASDASD<>><><><<><><<><><><><><><><"
 	Distance_time_object = DistanceTime.objects.filter(source = POI_source[0], dest = POI_dest[0])
 	time_diff = Distance_time_object[0].time
 	return float(time_diff)/60.0
@@ -418,6 +421,8 @@ def check_itenerary_consistency(tour,event_name,event_start,event_end):
 				break;
 			if((date_travel - start_day).days < path_index):
 				return True
+
+
 			start_time_event = event_start.split("T")[1]
 			start_time_event = start_time_event.split("+")[0]
 			start_time_event = datetime.datetime.strptime(start_time_event, '%H:%M:%S').time()
@@ -440,14 +445,23 @@ def check_itenerary_consistency(tour,event_name,event_start,event_end):
 					return True
 				return False
 
+			print POI_start_time, " ", POI_end_time
+			print POI_event_start_time, " ", POI_event_end_time
+
 			if POI_start_time < POI_event_start_time:
 				if POI_end_time > POI_event_start_time:
 					return False
 				travel_time = POI_event_start_time - POI_end_time
+				print travel_time
 				travel_time_actual = get_actual_time_difference(POI['name'],event_name,tour['city'])
-				if travel_time >= travel_time_actual:
+				print travel_time_actual
+				if round(travel_time,5) >= round(travel_time_actual,5):
+					print POI["name"]
+					print ".........................................."
 					return True
 				return False
+
+			
 
 	return True			
 
