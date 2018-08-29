@@ -6,17 +6,12 @@ from heapq import nsmallest
 
 R = 6373.0
 not_matching_score = 10
-matching_score = 50
+matching_score = 100
 
 def p_mean(rating):
 	return max(0.0, float(rating)/5.0)
 
 def calc_popularity(POI):
-	x = 3.5
-	y = 20000
-	return ((float(POI.rating) * float(POI.no_people_who_rated) + x * y) / (float(POI.no_people_who_rated) + y))**2
-
-
 	z_score = st.norm.ppf(0.995)
 	p = p_mean(POI.rating)
 	n = POI.no_people_who_rated
@@ -37,7 +32,11 @@ def gratification_score(POI,form):
 		else:
 			grat_score+=not_matching_score
 
-	grat_score = math.log(grat_score)*calc_popularity(POI)*3
+<<<<<<< Updated upstream
+	grat_score = math.log(grat_score) * calc_popularity(POI)
+	return grat_score
+=======
+	grat_score = math.log10(grat_score)*calc_popularity(POI)
 	return float(grat_score)
 
 def lat_lng_distance(point1,point2):
@@ -55,11 +54,11 @@ def lat_lng_distance(point1,point2):
 	distance = R * c
 	return distance
 
-def dist_gratification(grat_score, POI, cluster_centroid, no_days):
+def dist_gratification(grat_score, POI, cluster_centroid):
 	lat = POI.latitude
 	lng = POI.longitude
 	distance = lat_lng_distance((lat,lng),cluster_centroid)
-	return grat_score*math.exp(-0.2*(int((no_days-1)/2))*distance)
+	return grat_score*math.exp(-1*distance)
 
 
 def dist_gratification_k_closest(grat_score,POI,cluster,k):
@@ -81,3 +80,4 @@ def calculate_cluster_center(cluster_list):
 	centroid[1]/n
 	return tuple(centroid)
 	
+>>>>>>> Stashed changes

@@ -26,6 +26,8 @@ function getEvent(event_title, event_list){
     return -1;
 }
 
+trip_start_time = 10.0
+
 function createEventList(plan){
     let event_list = [];
     for(day=0; day<plan['tour'].length; day++){
@@ -37,7 +39,7 @@ function createEventList(plan){
             POI_end_date.setDate(POI_end_date.getDate() + day);
 
             let POI = plan['tour'][day][j];
-            let visit_time = parseFloat(POI['time'])+9.0;
+            let visit_time = parseFloat(POI['time'])+trip_start_time;
             let start_hour = getHour(visit_time);
             let start_min = getMinutes(visit_time);
             POI_start_date.setHours(start_hour);
@@ -66,10 +68,9 @@ function getEventObject(POI_name,start_date){
     let event_object = {};
     let POI_start_date = new Date(start_date);
     let POI_end_date = new Date(start_date);
-    POI_end_date.setHours(POI_start_date.getHours() + 2);
     event_object.title = POI_name;
-    event_object.start = moment(POI_start_date);
-    event_object.end = moment(POI_end_date);
+    event_object.start = moment(POI_start_date).add(5, 'hours');
+    event_object.end = moment(POI_end_date).add(6, 'hours');
     event_object.editable = true;
     event_object.eventDurationEditable = true;
     event_object.eventStartEditable = true;
@@ -152,13 +153,14 @@ $(document).ready(function() {
                     }
                 },
                 header: { center: 'addIteneraryButton'},
+                minTime: '05:00:00',
                 schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
                 defaultView: 'agendaItenerary',
                 defaultDate: plan['start_date'],
+                firstDay: new Date(parseInt(plan['start_date'].split("-")[0],10), parseInt(plan['start_date'].split("-")[1] - 1,10), parseInt(plan['start_date'].split("-")[2].split("T")[0],10)).getDay(),
                 events: event_list,
                 eventResize: function(event, delta, revertFunc) {
-                    
-                    alert(event.title + " end is now " + event.end.format());
+
                     $.ajax({
                         type: 'POST',
                         url: '/iteneraryApplication/ajax/update_tour/',
@@ -175,9 +177,10 @@ $(document).ready(function() {
                             // console.log(data);
                             plan = data;
                             document.getElementById('plan_actual').value = JSON.stringify(plan);
+                            console.log(document.getElementById('plan_actual').value);
                         },
                         error: function (data) {
-                            alert("conflict found. reverting");
+                            swal("conflict found. reverting");
                             revertFunc();
                         }
                     });
@@ -185,8 +188,6 @@ $(document).ready(function() {
                 },
                 eventDrop: function(event, delta, revertFunc) {
                     // console.log(event);
-
-                    alert(event.title + " was dropped on " + event.start.format());
                     $.ajax({
                         type: 'POST',
                         url: '/iteneraryApplication/ajax/update_tour/',
@@ -203,10 +204,12 @@ $(document).ready(function() {
                             // console.log(data);
                             plan = data;
                             document.getElementById('plan_actual').value = JSON.stringify(plan);
+                            console.log(document.getElementById('plan_actual').value);
+                            console.log(document.getElementById('plan_actual').value);
                             // console.log(plan);
                         },
                         error: function (data) {
-                            alert("conflict found. reverting");
+                            swal("conflict found. reverting");
                             revertFunc();
                         }
                     });
@@ -245,13 +248,13 @@ $(document).ready(function() {
                                 // console.log(data);
                                 plan = data;
                                 document.getElementById('plan_actual').value = JSON.stringify(plan);
+                                console.log(document.getElementById('plan_actual').value);
                             }
                         });
                     }
                 },
 
                 eventClick: function(calEvent, jsEvent, view) {
-                    alert("model should show");
                     $('#infoModal').on('show.bs.modal', function (event) {
                        $(this).find('h4.modal-title').text(calEvent.title);
                     });
@@ -278,7 +281,7 @@ $(document).ready(function() {
                 e.preventDefault();
                 let POI_name = document.getElementById('addPOI').value;
                 if(eventExists(POI_name,event_list))
-                    alert("The place already exists in your itenerary");
+                    swal("The place already exists in your itenerary");
 
                 else{
                     let event_to_add = getEventObject(POI_name,plan['start_date']);
@@ -302,9 +305,10 @@ $(document).ready(function() {
                             // console.log(event_list);
                             plan = data;
                             document.getElementById('plan_actual').value = JSON.stringify(plan);
+                            console.log(document.getElementById('plan_actual').value);
                         },
                         error: function (data) {
-                            alert("conflict found. reverting");
+                            swal("conflict found. reverting");
                             // revertFunc();
                         }
                     });
@@ -328,7 +332,7 @@ $(document).ready(function() {
                plan = remove_POI_from_plan(plan,event_title);
                // console.log(plan);
                document.getElementById('plan_actual').value = JSON.stringify(plan);
-               // console.log(document.getElementById('plan_actual').value);
+               console.log(document.getElementById('plan_actual').value);
 
             });
         });
