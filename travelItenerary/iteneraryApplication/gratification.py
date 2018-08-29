@@ -12,6 +12,11 @@ def p_mean(rating):
 	return max(0.0, float(rating)/5.0)
 
 def calc_popularity(POI):
+	x = 3.5
+	y = 20000
+	return ((float(POI.rating) * float(POI.no_people_who_rated) + x * y) / (float(POI.no_people_who_rated) + y))**2
+
+
 	z_score = st.norm.ppf(0.995)
 	p = p_mean(POI.rating)
 	n = POI.no_people_who_rated
@@ -50,11 +55,11 @@ def lat_lng_distance(point1,point2):
 	distance = R * c
 	return distance
 
-def dist_gratification(grat_score, POI, cluster_centroid):
+def dist_gratification(grat_score, POI, cluster_centroid, no_days):
 	lat = POI.latitude
 	lng = POI.longitude
 	distance = lat_lng_distance((lat,lng),cluster_centroid)
-	return grat_score*math.exp(0*distance)
+	return grat_score*math.exp(-0.2*(int((no_days-1)/2))*distance)
 
 
 def dist_gratification_k_closest(grat_score,POI,cluster,k):

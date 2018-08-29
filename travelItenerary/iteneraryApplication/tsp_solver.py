@@ -77,7 +77,7 @@ def calculate_time(path):
 		time+=path[i].average_time_spent
 		time+=max(Decimal(0.25), Decimal(distance_to_next_object[0].time/60.0))
 	time+=path[path_len-1].average_time_spent
-	return time
+	return float(time)
 
 def calculate_time_upto(POI, path):
 	path_len = len(path)

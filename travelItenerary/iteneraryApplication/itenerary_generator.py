@@ -8,6 +8,8 @@ from django.core.serializers.json import DjangoJSONEncoder
 import math
 from .get_POI import get_POI_object
 from .generate_cluster_ordering import generate_order
+from decimal import *
+
 half_day_time = 10.0
 trip_time_start = 10.0
 threshold = 12
@@ -43,6 +45,39 @@ def get_lng(POI):
 def tour_sort_key(POI):
 	return float(POI['time'])
 
+def modify_time_to_spend(POI,no_days):
+	if no_days==1:
+		a = float(POI.average_time_spent)
+		if(a<0.75):
+			POI.average_time_spent = 0.75
+		elif a>1.5:
+			POI.average_time_spent = 1.5
+		else:
+			POI.average_time_spent = a
+
+	elif no_days == 2:
+		# print "NO OF DAYS are", no_days
+		a = float(POI.average_time_spent)
+		if(a<1.0):
+			POI.average_time_spent = 1.0
+		elif a>1.5:
+			POI.average_time_spent = 1.5
+		else:
+			POI.average_time_spent = a
+
+	elif no_days == 3:
+		a = float(POI.average_time_spent)
+		if(a<1.0):
+			POI.average_time_spent = 1.0
+		elif a>2.0:
+			POI.average_time_spent = 2.0
+		else:
+			POI.average_time_spent = a
+	POI.average_time_spent = Decimal(POI.average_time_spent)
+
+	return POI
+
+
 def generate_itenerary(form):
 	city = form['city']
 	start_date = form['start_date']
@@ -53,6 +88,13 @@ def generate_itenerary(form):
 	POI_querySet = PointOfInterest.objects.filter(POI_city = city)
 	for POI in POI_querySet:
 		POI_list.append(POI)
+
+	print POI_list[1].average_time_spent
+	for i in range(0,len(POI_list)):
+		modify_time_to_spend(POI_list[i],no_days)
+
+	print POI_list[1].average_time_spent
+
 	generate_gratification_score_all(POI_list,form)
 	POI_list.sort(key=gratification_sort, reverse=True)
 
@@ -73,7 +115,7 @@ def generate_itenerary(form):
 	(cluster_list,cluster_centroids) = generate_order(cluster_list,kmeans.cluster_centers_, no_days)
 	# print ">>>>>>>>>>><<<<<<<<<<<<>>>>>>>>><<<<<<<<<<<<"
 	# print cluster_centroids
-	cluster_list = tsp_POI_delegation(cluster_list,cluster_centroids)
+	cluster_list = tsp_POI_delegation(cluster_list,cluster_centroids,no_days)
 	#cluster_list = new_find_route(cluster_list)
 	# print(cluster_list[0])
 	output = itenerary_json(cluster_list,form)
@@ -163,13 +205,13 @@ def redistribute(cluster_list):
 	
 
 
-def tsp_POI_delegation(cluster_list,cluster_list_centroids):
+def tsp_POI_delegation(cluster_list,cluster_list_centroids, no_days):
 	no_days = len(cluster_list)
 	cluster_list_tsp = copy.deepcopy(cluster_list)
 	for i in range(0,no_days-1):
 
 		for POI in cluster_list[i]:
-			grat_score_dict[POI] = dist_gratification(grat_score_dict[POI],POI,cluster_list_centroids[i])
+			grat_score_dict[POI] = dist_gratification(grat_score_dict[POI],POI,cluster_list_centroids[i],no_days)
 
 		cluster_list[i].sort(key=gratification_sort, reverse=True)
 
@@ -184,7 +226,7 @@ def tsp_POI_delegation(cluster_list,cluster_list_centroids):
 		time = calculate_time(cluster_list_tsp[i])
 		while(time>half_day_time):
 			for POI in cluster_list[i]:
-				grat_score_dict[POI] = dist_gratification(grat_score_dict[POI],POI,cluster_list_centroids[i])
+				grat_score_dict[POI] = dist_gratification(grat_score_dict[POI],POI,cluster_list_centroids[i],no_days)
 				# grat_score_dict[POI] = dist_gratification_k_closest(grat_score_dict[POI],POI,cluster_list[i],2)
 				# print POI, " gratification ", grat_score_dict[POI]					
 			POI_to_delegate = cluster_list[i].pop(-1)				#removing the last element to fit the time inside half a day
@@ -200,7 +242,7 @@ def tsp_POI_delegation(cluster_list,cluster_list_centroids):
 	# 	print "----------", elem.POI_name, grat_score_dict[elem]
 
 	for POI in cluster_list[i]:
-		grat_score_dict[POI] = dist_gratification(grat_score_dict[POI],POI,cluster_list_centroids[i])
+		grat_score_dict[POI] = dist_gratification(grat_score_dict[POI],POI,cluster_list_centroids[i],no_days)
 
 	cluster_list[i].sort(key=gratification_sort, reverse=True)
 
@@ -212,7 +254,7 @@ def tsp_POI_delegation(cluster_list,cluster_list_centroids):
 	time = calculate_time(cluster_list_tsp[i])
 	while(time>half_day_time):
 		for POI in cluster_list[i]:
-			grat_score_dict[POI] = dist_gratification(grat_score_dict[POI],POI,cluster_list_centroids[i])
+			grat_score_dict[POI] = dist_gratification(grat_score_dict[POI],POI,cluster_list_centroids[i],no_days)
 			# print POI, " gratification ", grat_score_dict[POI]	
 			# grat_score_dict[POI] = dist_gratification_k_closest(grat_score_dict[POI],POI,cluster_list[i],2)
 			# print "++++++++++++++++++++++", cluster_list[i][-1].POI_name
@@ -248,7 +290,7 @@ def itenerary_json(cluster_list,form):
 			POI_json['rating'] = POI.rating
 			POI_json['description'] = POI.description
 			POI_json['time'] = float(calculate_time_upto(POI,path))
-			POI_json['time_spent'] = float(PointOfInterest.objects.get(POI_id = POI.POI_id).average_time_spent)
+			POI_json['time_spent'] = POI.average_time_spent
 			POI_json['cost'] = 10
 			path_json.append(POI_json)
 			multiply += 1
