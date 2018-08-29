@@ -21,16 +21,12 @@ var colors = [
 var defaultLegendcolor = 'rgb(250, 140, 0)';
 
 function onMapTabOpened(){
-    console.log('yo');
     map_plan = JSON.parse(document.getElementById('plan_actual').value).tour
    
     recreateMapLegendElements();
     hideMarkers();
     createMarkers();
-    displayDate();
-    displayMapLegend();
-    displayRoute();
-
+    $('#tab-day-0').trigger('click');
 
 }
 
@@ -97,10 +93,10 @@ function addMapLegendElements(){
 
 function createLeftPanel(){
     let dayListElem = $('#dayList');
-    dayListElem.append('<div class="day-box in-plan active"><div class="day text-link">' + 1 + '</div></div>');
+    dayListElem.append('<div id="tab-day-0" class="day-box in-plan active"><div class="day text-link">' + 1 + '</div></div>');
     
     for (let i = 2; i <= map_plan.length; i++) {
-        dayListElem.append('<div class="day-box in-plan"><div class="day text-link">' + i + '</div></div>');
+        dayListElem.append(`<div id="tab-day-${i}"class="day-box in-plan"><div class="day text-link">${i}</div></div>`);
     }
     dayListElem.append('<div class="day-box in-plan" id="allTab"><div class="day text-link">All</div></div>');    
 }
