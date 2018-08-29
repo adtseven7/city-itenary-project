@@ -14,8 +14,11 @@ def p_mean(rating):
 def calc_popularity(POI):
 	x = 3.5
 	y = 20000
-	return ((float(POI.rating) * float(POI.no_people_who_rated) + x * y) / (float(POI.no_people_who_rated) + y))**2
-
+	rank_multiplier = 1
+	if(POI.google_rank < 3):
+		rank_multiplier = 3.0/float(POI.google_rank)
+	a = ((float(POI.rating) * float(POI.no_people_who_rated) + x * y) / (float(POI.no_people_who_rated) + y))**2
+	return a*rank_multiplier
 
 	z_score = st.norm.ppf(0.995)
 	p = p_mean(POI.rating)
