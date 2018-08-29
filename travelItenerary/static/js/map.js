@@ -217,7 +217,14 @@ function createMarkers(){
                 } ,
                 icon : pinSymbol(colors[daynum])
             });
-            let infoWindow = new google.maps.InfoWindow({content : route[i].name})
+            let infoWindow = new google.maps.InfoWindow({
+                    content : `<div style='float:left'>
+                    <img src="/static/${route[i].images[0].replace('new_data','small')}"></div>
+                    <div style='float:right; padding: 10px;'>
+                        <b>${route[i].name}</b><br/>
+                        ${route[i].time_to_show}</div>`
+                    // route[i].name
+                })
             tmpMarkers[i].addListener('mouseover',function(){
                 infoWindow.open(map,tmpMarkers[i]);
             });
