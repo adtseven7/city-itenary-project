@@ -18,11 +18,17 @@ dist_matrix = []
 def create_distance_matrix(POI_list):
 	no_POI = len(POI_list)+1
 	dist_matrix = np.zeros((no_POI,no_POI))
+<<<<<<< HEAD
+	for i in range(1,len(POI_list)+1):
+		for j in range(1,len(POI_list)+1):
+			if i==j:
+=======
 	for i in range(0,no_POI):
 		for j in range(0,no_POI):
 			if i==0 or j==0:
 				dist_matrix[i][j]=0
 			elif i==j:
+>>>>>>> reassign
 				dist_matrix[i][j] = 0
 			else:
 				distance_i_to_j_object = DistanceTime.objects.filter(source = POI_list[i-1], dest = POI_list[j-1])
@@ -34,7 +40,11 @@ def create_distance_matrix(POI_list):
 
 def tsp_solver(POI_list):
 
+<<<<<<< HEAD
+	tsp_size = len(POI_list) + 1
+=======
 	tsp_size = len(POI_list)+1
+>>>>>>> reassign
 	num_routes = 1
 	depot = 0
 	dist_matrix = create_distance_matrix(POI_list)

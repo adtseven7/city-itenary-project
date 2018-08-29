@@ -2,7 +2,11 @@ from .models import City, Type, PointOfInterest, OpenCloseTime, Photo, Form, Dis
 from sklearn.cluster import KMeans
 import numpy as np
 from tsp_solver import tsp_solver, calculate_time, calculate_time_upto
+<<<<<<< Updated upstream
 from .gratification import *
+=======
+from .gratification import * 
+>>>>>>> Stashed changes
 import json, datetime, copy
 from django.core.serializers.json import DjangoJSONEncoder
 import math
@@ -96,8 +100,8 @@ def generate_itenerary(form):
 		POI_list.append(POI)
 
 	# print POI_list[1].average_time_spent
-	# for i in range(0,len(POI_list)):
-	# 	modify_time_to_spend(POI_list[i],no_days)
+	for i in range(0,len(POI_list)):
+		modify_time_to_spend(POI_list[i],no_days)
 
 	# print POI_list[1].average_time_spent
 
@@ -259,6 +263,10 @@ def tsp_POI_delegation(cluster_list,cluster_list_centroids, no_days):
 
 	cluster_list_tsp[i] = tsp_solver(cluster_list[i])
 	time = calculate_time(cluster_list_tsp[i])
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 	extra_poi = []
 	while(time>half_day_time):
 		for POI in cluster_list[i]:
@@ -268,19 +276,41 @@ def tsp_POI_delegation(cluster_list,cluster_list_centroids, no_days):
 			# print "++++++++++++++++++++++", cluster_list[i][-1].POI_name
 		# print cluster_list[i][-1]
 		cluster_list[i].sort(key=dist_gratification_sort, reverse=True)
+<<<<<<< Updated upstream
 		extra_poi.append(cluster_list[i][-1])
 		del cluster_list[i][-1]			#removing the last element to fit the time inside half a day
+=======
+		extra_poi.append(cluster_list[i].pop(-1))			#removing the last element to fit the time inside half a day
+>>>>>>> Stashed changes
 		cluster_list_tsp[i] = tsp_solver(cluster_list[i])
 		time = calculate_time(cluster_list_tsp[i])
 		cluster_list_centroids[i] = calculate_cluster_center(cluster_list[i])
 	
 	reassign_sites(extra_poi, cluster_list_tsp)
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 
 	return cluster_list_tsp
 
 def reassign_sites(extra_poi , cluster_list):
 	extra_poi.sort(key = gratification_sort)
+<<<<<<< Updated upstream
+	for poi in extra_poi:
+		print u'considering excluded point {}'.format(poi.POI_name)
+		dist_sorted_cluster_indices = sort_by_distance(poi, cluster_list)
+		for cluster_index in dist_sorted_cluster_indices:
+			print 'closest cluster {}'.format(cluster_index)
+			if half_day_time - (calculate_time(cluster_list[cluster_index]) + float(poi.average_time_spent)) >= 0.75 :
+				cluster_list[cluster_index].append(poi)
+				print 'reassigned to cluster {}'.format(cluster_index)
+				break
+
+	for i in range(len(cluster_list)):
+		cluster_list[i] = tsp_solver(cluster_list[i])
+		
+=======
 	print extra_poi
 	print ">ADSDSADSADSADSAD"
 	for poi in extra_poi:
@@ -302,6 +332,7 @@ def reassign_sites(extra_poi , cluster_list):
 		cluster_list[i] = tsp_solver(cluster_list[i])
 		print "after tsp"
 		print cluster_list[i]
+>>>>>>> Stashed changes
 
 
 def sort_by_distance(point, cluster_list_arg):
@@ -497,99 +528,8 @@ def check_itenerary_consistency(tour,event_name,event_start,event_end):
 					return True
 				return False
 
-	return True		
+			
 
-
-def value_function(grat_score, distance, no_days):
-	#print ";;;;;;;;;;", grat_score, distance
-	grat_score = float(grat_score)
-	distance = float(distance)/10000.0
-	return (grat_score**2) * math.exp(max(0, (no_days-1)) * (-distance))
-	'''grat_score = float(grat_score)
-	distance = float(distance)/1000.0
-	divide = max(1, 500.0 / (no_days**3))
-	return (grat_score**2) * math.exp(-distance/divide)
-	'''
-
-
-def generate_itenerary_greedy(POI_list, form):
-	city = form['city']
-	start_date = form['start_date']
-	end_date = form['end_date']
-
-	no_days = (end_date - start_date).days + 1
-	POI_query_list = PointOfInterest.objects.filter(POI_city = city)
-	generate_gratification_score_all(POI_list,form)
-	POI_list = []
-	for i in range(0, len(POI_query_list)):
-		if POI_query_list[i].no_people_who_rated > 100:
-			POI_list.append(POI_query_list[i])
-	POI_list.sort(key=gratification_sort, reverse=True)
-	# for i in range(10*no_days, len(POI_query_list)):
-	# 	POI_list.pop()
-	for elem in POI_list:
-		print elem.POI_name, grat_score_dict[elem]
-	visited = {}
-
-	cluster_list = []
-	no_days = (end_date - start_date).days + 1
-	cur = 0
-	final_path = []
-	for day in range(1, no_days + 1):
-		start = cur
-		path = []
-		time = 9.0 * 60.0
-		while True:
-			if POI_list[start] not in visited.keys():
-				break
-			start += 1
-		path.append(POI_list[start])
-		visited[POI_list[start]] = 1
-		time += float(POI_list[start].average_time_spent) * 60.0
-		pretime = time
-		start_time = 9.0 * 60.0
-		total_time = 9.0 * 60.0
-		while True:
-			if time - start_time > total_time:
-				break
-			value = -1000000000.0
-			next_start = start + 1
-			for i in range(0, len(POI_list)):
-				if i == start:
-					continue
-				other_poi = POI_list[i]
-				if other_poi in visited.keys():
-					continue
-				other_value = value_function(grat_score_dict[other_poi], DistanceTime.objects.get(source = POI_list[start], dest = other_poi).distance, no_days)
-
-				if other_value > value:
-					time = pretime + DistanceTime.objects.get(source = POI_list[start], dest = other_poi).time + (float(other_poi.average_time_spent) * 60.0)
-					if time - start_time > total_time:
-						time = pretime
-						continue
-					next_poi = other_poi
-					value = other_value
-					next_start = i
-
-			if(value == -1000000000.0):
-				break
-			# print ":::::::::::", next_poi.POI_name, time
-
-			path.append(next_poi)
-			visited[next_poi] = 1
-			pretime = time
-			start = next_start
-
-		final_path.append(path)
-		for j in range(cur+1, len(POI_list)):
-			if POI_list[j] not in visited.keys():
-				cur = j
-				break
-
-	if no_days == 1:
-		final_path[0] = tsp_solver(final_path[0])
-	return final_path
-
-
+	return True			
 
 
