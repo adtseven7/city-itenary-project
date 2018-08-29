@@ -39,7 +39,7 @@ def gratification_sort(POI):
 	return grat_score_dict[POI]
 
 def dist_gratification_sort(POI):
-	return grat_score_dict[POI]
+	return grat_score_dist_dict[POI]
 
 
 def get_lat(POI):
@@ -272,8 +272,21 @@ def tsp_POI_delegation(cluster_list,cluster_list_centroids, no_days):
 		time = calculate_time(cluster_list_tsp[i])
 		cluster_list_centroids[i] = calculate_cluster_center(cluster_list[i])
 	
+	#reassign_sites(extra_poi, cluster_list_tsp)
+
 	return cluster_list_tsp
 
+def reassign_sites(extra_poi , cluster_list):
+	extra_poi.sort(key = gra)
+	#for poi in extra_poi:
+
+
+
+def sort_by_distance(point, cluster_list):
+	return sorted(range(len(cluster_list)),
+		key= lambda i : 
+		lat_lng_distance(calculate_cluster_center(cluster_list[i]), (point.latitude , point.longitude))
+		)
 
 def itenerary_json(cluster_list,form):
 	# extra_time_list = redistribute(cluster_list)

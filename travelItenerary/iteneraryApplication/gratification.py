@@ -62,7 +62,7 @@ def dist_gratification(grat_score, POI, cluster_centroid, no_days):
 	lat = POI.latitude
 	lng = POI.longitude
 	distance = lat_lng_distance((lat,lng),cluster_centroid)
-	return grat_score*math.exp(-0.2*(int((no_days-1)/2))*distance)
+	return grat_score*math.exp(-0.02*(int((no_days-1)/2))*distance)
 
 
 def dist_gratification_k_closest(grat_score,POI,cluster,k):
