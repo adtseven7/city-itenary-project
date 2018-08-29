@@ -2,7 +2,7 @@ from .models import City, Type, PointOfInterest, OpenCloseTime, Photo, Form, Dis
 from sklearn.cluster import KMeans
 import numpy as np
 from tsp_solver import tsp_solver, calculate_time, calculate_time_upto
-from .gratification import gratification_score, dist_gratification, dist_gratification_k_closest, calculate_cluster_center
+from .gratification import *
 import json, datetime, copy
 from django.core.serializers.json import DjangoJSONEncoder
 import math
@@ -259,6 +259,7 @@ def tsp_POI_delegation(cluster_list,cluster_list_centroids, no_days):
 
 	cluster_list_tsp[i] = tsp_solver(cluster_list[i])
 	time = calculate_time(cluster_list_tsp[i])
+	extra_poi = []
 	while(time>half_day_time):
 		for POI in cluster_list[i]:
 			grat_score_dist_dict[POI] = dist_gratification(grat_score_dict[POI],POI,cluster_list_centroids[i],no_days)
@@ -267,19 +268,32 @@ def tsp_POI_delegation(cluster_list,cluster_list_centroids, no_days):
 			# print "++++++++++++++++++++++", cluster_list[i][-1].POI_name
 		# print cluster_list[i][-1]
 		cluster_list[i].sort(key=dist_gratification_sort, reverse=True)
+		extra_poi.append(cluster_list[i][-1])
 		del cluster_list[i][-1]			#removing the last element to fit the time inside half a day
 		cluster_list_tsp[i] = tsp_solver(cluster_list[i])
 		time = calculate_time(cluster_list_tsp[i])
 		cluster_list_centroids[i] = calculate_cluster_center(cluster_list[i])
 	
-	#reassign_sites(extra_poi, cluster_list_tsp)
+	reassign_sites(extra_poi, cluster_list_tsp)
+
 
 	return cluster_list_tsp
 
 def reassign_sites(extra_poi , cluster_list):
-	extra_poi.sort(key = gra)
-	#for poi in extra_poi:
+	extra_poi.sort(key = gratification_sort)
+	for poi in extra_poi:
+		print u'considering excluded point {}'.format(poi.POI_name)
+		dist_sorted_cluster_indices = sort_by_distance(poi, cluster_list)
+		for cluster_index in dist_sorted_cluster_indices:
+			print 'closest cluster {}'.format(cluster_index)
+			if half_day_time - (calculate_time(cluster_list[cluster_index]) + float(poi.average_time_spent)) >= 0.75 :
+				cluster_list[cluster_index].append(poi)
+				print 'reassigned to cluster {}'.format(cluster_index)
+				break
 
+	for i in range(len(cluster_list)):
+		cluster_list[i] = tsp_solver(cluster_list[i])
+		
 
 
 def sort_by_distance(point, cluster_list):

@@ -14,6 +14,7 @@ def p_mean(rating):
 def calc_popularity(POI):
 	x = 3.5
 	y = 20000
+	
 	return ((float(POI.rating) * float(POI.no_people_who_rated) + x * y) / (float(POI.no_people_who_rated) + y))**2
 
 
