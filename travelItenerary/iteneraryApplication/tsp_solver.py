@@ -3,6 +3,7 @@ from ortools.constraint_solver import routing_enums_pb2
 import numpy as np
 from .models import DistanceTime
 from decimal import *
+import tsp
 
 def create_distance_callback(dist_matrix):
   # Create a callback to calculate distances between cities.
@@ -12,23 +13,28 @@ def create_distance_callback(dist_matrix):
 
 	return distance_callback
 
+dist_matrix = []
+
 def create_distance_matrix(POI_list):
-	no_POI = len(POI_list) + 1
+	no_POI = len(POI_list)+1
 	dist_matrix = np.zeros((no_POI,no_POI))
-	for i in range(1,len(POI_list)):
-		for j in range(1,len(POI_list)):
-			if i==j:
+	for i in range(0,no_POI):
+		for j in range(0,no_POI):
+			if i==0 or j==0:
+				dist_matrix[i][j]=0
+			elif i==j:
 				dist_matrix[i][j] = 0
 			else:
 				distance_i_to_j_object = DistanceTime.objects.filter(source = POI_list[i-1], dest = POI_list[j-1])
 				dist_matrix[i][j] = Decimal(float(distance_i_to_j_object[0].distance))
+	print 
 	return dist_matrix
 
 
 
 def tsp_solver(POI_list):
 
-	tsp_size = len(POI_list)
+	tsp_size = len(POI_list)+1
 	num_routes = 1
 	depot = 0
 	dist_matrix = create_distance_matrix(POI_list)
@@ -52,20 +58,38 @@ def tsp_solver(POI_list):
 			index = routing.Start(route_number) # Index of the variable for the starting node.
 			index = assignment.Value(routing.NextVar(index))
 			while not routing.IsEnd(index):
+				print routing.IndexToNode(index)
+
 		 		# Convert variable indices to node indices in the displayed route.
-				route.append(POI_list[routing.IndexToNode(index) - 1])
+		 		
+				route.append(POI_list[routing.IndexToNode(index)-1])
 				index = assignment.Value(routing.NextVar(index))
+			# route.append(POI_list[routing.IndexToNode(index)-1])
 	    	# route.append(POI_list[routing.IndexToNode(index)])
 			# print "route calculated"
 		else:
 			print 'No solution found.'
-	elif tsp_size == 1:
+	elif tsp_size == 2:
 		route.append(POI_list[0])
 	else:
 		print 'Specify an instance greater than 0.'
 	# print "printing route ABABABABBABABBABBBBABBAB"
 	# print route
 	return route
+
+# def tsp_solver(POI_list):
+# 	tsp_size = len(POI_list)
+# 	depot = 0
+# 	dist_matrix = create_distance_matrix(POI_list)
+# 	route = []
+
+# 	r = range(len(dist_matrix))
+# 	# Dictionary of distance
+# 	dist = {(i, j): dist_matrix[i][j] for i in r for j in r}
+# 	route_index = tsp.tsp(r, dist)[1]
+# 	for i in range(1,len(route_index)):
+# 		route.append(POI_list[route_index[i]-1])
+# 	return route
 
 def calculate_time(path):
 	path_len = len(path)
