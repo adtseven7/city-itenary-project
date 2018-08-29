@@ -15,8 +15,8 @@ def create_distance_callback(dist_matrix):
 def create_distance_matrix(POI_list):
 	no_POI = len(POI_list) + 1
 	dist_matrix = np.zeros((no_POI,no_POI))
-	for i in range(1,len(POI_list)):
-		for j in range(1,len(POI_list)):
+	for i in range(1,len(POI_list)+1):
+		for j in range(1,len(POI_list)+1):
 			if i==j:
 				dist_matrix[i][j] = 0
 			else:
@@ -28,7 +28,7 @@ def create_distance_matrix(POI_list):
 
 def tsp_solver(POI_list):
 
-	tsp_size = len(POI_list)
+	tsp_size = len(POI_list) + 1
 	num_routes = 1
 	depot = 0
 	dist_matrix = create_distance_matrix(POI_list)

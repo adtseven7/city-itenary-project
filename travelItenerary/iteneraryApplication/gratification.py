@@ -2,16 +2,16 @@ from .models import PointOfInterest, Type, Form
 import scipy.stats as st
 import math
 
-not_matching_score = 100
+not_matching_score = 0
 matching_score = 10000
 
 def p_mean(rating):
 	return max(0.0, float(rating)/5.0)
 
 def calc_popularity(POI):
-	x = 4.0
+	x = 3.5
 	y = 10000
-	return ((float(POI.rating) * float(POI.no_people_who_rated) + x * y) / (float(POI.no_people_who_rated) + y))**2
+	return (float(POI.rating) * float(POI.no_people_who_rated) + x * y) / (float(POI.no_people_who_rated) + y)
 
 
 	z_score = st.norm.ppf(0.995)
@@ -33,6 +33,12 @@ def gratification_score(POI,form):
 			grat_score+=matching_score
 		else:
 			grat_score+=not_matching_score
+
+	# if POI.POI_name == "Central Park":
+	# 	print ">>>>>", form_types
+	# 	print POI_types
+	# 	print "--------------------"
+	# 	print grat_score, math.log(grat_score) * calc_popularity(POI)
 
 	grat_score = math.log(grat_score) * calc_popularity(POI)
 	return grat_score

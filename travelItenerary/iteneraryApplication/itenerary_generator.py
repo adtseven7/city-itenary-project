@@ -66,7 +66,7 @@ def generate_itenerary(form):
 
 	# cluster_list = tsp_POI_delegation(cluster_list)
 	# #cluster_list = new_find_route(cluster_list)
-	# print(cluster_list[0])
+	# # print(cluster_list[0])
 	output = itenerary_json(cluster_list,form)
 	#print(output)
 	return output
@@ -224,7 +224,7 @@ def itenerary_json(cluster_list,form):
 			POI_json['rating'] = POI.rating
 			POI_json['description'] = POI.description
 			POI_json['time'] = float(calculate_time_upto(POI,path))
-			POI_json['time_spent'] = float(PointOfInterest.objects.get(POI_id = POI.POI_id).average_time_spent) + float(extra_time_list[ct])
+			POI_json['time_spent'] = float(POI.average_time_spent) + float(extra_time_list[ct])
 			POI_json['cost'] = 10
 			path_json.append(POI_json)
 			multiply += 1
@@ -384,11 +384,16 @@ def check_itenerary_consistency(tour,event_name,event_start,event_end):
 	return True		
 
 
-def value_function(grat_score, distance):
+def value_function(grat_score, distance, no_days):
 	#print ";;;;;;;;;;", grat_score, distance
 	grat_score = float(grat_score)
+	distance = float(distance)/10000.0
+	return (grat_score**2) * math.exp(max(0, (no_days-1)) * (-distance))
+	'''grat_score = float(grat_score)
 	distance = float(distance)/1000.0
-	return (grat_score**2) * math.exp(-distance/5.0)
+	divide = max(1, 500.0 / (no_days**3))
+	return (grat_score**2) * math.exp(-distance/divide)
+	'''
 
 
 def generate_itenerary_greedy(POI_list, form):
@@ -401,7 +406,8 @@ def generate_itenerary_greedy(POI_list, form):
 	generate_gratification_score_all(POI_list,form)
 	POI_list = []
 	for i in range(0, len(POI_query_list)):
-		POI_list.append(POI_query_list[i])
+		if POI_query_list[i].no_people_who_rated > 100:
+			POI_list.append(POI_query_list[i])
 	POI_list.sort(key=gratification_sort, reverse=True)
 	# for i in range(10*no_days, len(POI_query_list)):
 	# 	POI_list.pop()
@@ -438,7 +444,7 @@ def generate_itenerary_greedy(POI_list, form):
 				other_poi = POI_list[i]
 				if other_poi in visited.keys():
 					continue
-				other_value = value_function(grat_score_dict[other_poi], DistanceTime.objects.get(source = POI_list[start], dest = other_poi).distance)
+				other_value = value_function(grat_score_dict[other_poi], DistanceTime.objects.get(source = POI_list[start], dest = other_poi).distance, no_days)
 
 				if other_value > value:
 					time = pretime + DistanceTime.objects.get(source = POI_list[start], dest = other_poi).time + (float(other_poi.average_time_spent) * 60.0)
@@ -464,6 +470,8 @@ def generate_itenerary_greedy(POI_list, form):
 				cur = j
 				break
 
+	if no_days == 1:
+		final_path[0] = tsp_solver(final_path[0])
 	return final_path
 
 
