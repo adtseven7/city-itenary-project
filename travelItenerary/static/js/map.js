@@ -56,7 +56,7 @@ function addMapLegendElements(){
         innerDayPlanHTML = "";
         for (let i = 0; i < route.length; i++) {
             let placeHtml =
-            `<li class="visit-name">
+            `<li class="visit-name" id="legend-${daynum}-${i}">
             <span>
             <span class="map-marker-circle mapMarkerDay${daynum}" style="background-color: ${defaultLegendcolor};">
             ${String.fromCharCode('A'.charCodeAt(0) + i)}
@@ -69,7 +69,7 @@ function addMapLegendElements(){
             if (i != route.length - 1){
                 travelHtml =
                 `<li class="hop-duration bg-stripe">
-                <a class="directions text-link" href="javascript:void(0)" target="_blank">
+                <a class="directions text-link" href="javascript:void(0)" target="_blank" style="cursor : default;">
                 ${getTravelTime(daynum,i)}</a>
                 </li>`;
             }
@@ -220,8 +220,8 @@ function createMarkers(){
             let infoWindow = new google.maps.InfoWindow({
                     content : `<div style='float:left'>
                     <img src="/static/${route[i].images[0].replace('new_data','small')}"></div>
-                    <div style='float:right; padding: 10px;'>
-                        <b>${route[i].name}</b><br/>
+                    <div style='float:right; padding: 8px;max-width: 20ch;'>
+                        <b style="max-width: 15ch;">${route[i].name}</b><br/>
                         ${route[i].time_to_show}</div>`
                     // route[i].name
                 })
@@ -230,6 +230,16 @@ function createMarkers(){
             });
             tmpMarkers[i].addListener('mouseout',function(){
                 infoWindow.close();
+            });
+
+            let lengendEl = $(`#legend-${daynum}-${i}`);
+            lengendEl.mouseover(function(){
+                infoWindow.open(map,tmpMarkers[i]);
+                lengendEl.attr('style','cursor : pointer');
+            });
+            lengendEl.mouseout(function(){
+                infoWindow.close();
+                lengendEl.attr('style','cursor : default');
             });
         }
         markers[daynum] = tmpMarkers;
