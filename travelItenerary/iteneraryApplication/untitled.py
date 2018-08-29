@@ -2,7 +2,7 @@ from .models import City, Type, PointOfInterest, OpenCloseTime, Photo, Form, Dis
 from sklearn.cluster import KMeans
 import numpy as np
 from tsp_solver import tsp_solver, calculate_time, calculate_time_upto
-from .gratification import gratification_score, dist_gratification, dist_gratification_k_closest, calculate_cluster_center
+from .gratification import *
 import json, datetime, copy
 from django.core.serializers.json import DjangoJSONEncoder
 import math
@@ -33,14 +33,12 @@ def generate_gratification_score_all(POI_list,form):
 	global grat_score_dict
 	for POI in POI_list:
 		grat_score_dict[POI]=gratification_score(POI,form)
-		grat_score_dist_dict[POI] = grat_score_dict[POI]
 
 def gratification_sort(POI):
 	return grat_score_dict[POI]
 
-def dist_gratification_sort(POI):
-	return grat_score_dict[POI]
-
+def gratification_sort_dist(POI):
+	return grat_score_dist_dict[POI]
 
 def get_lat(POI):
 	return POI.latitude
@@ -148,67 +146,9 @@ def redistribute(cluster_list):
 		# print ">>>>>>>>>>>>>***********", add
 	return extra_time_list
 
-# def new_find_route(cluster_list):
-# 	no_days = len(cluster_list)
-# 	sites_to_visit_list = [[]] * no_days
+def sort_by_distance(point, cluster_list):
 	
-# 	for i in range(no_days):
-# 		cluster_list[i].sort(key=gratification_sort, reverse=True)
-# 		threshold = 11
-# 		while len(cluster_list[i]) > threshold:
-# 			extra_poi = cluster_list[i].pop(-1)
-# 			if i < no_days-1:
-# 				cluster_list[i+1].append(extra_poi)
-
-# 		sites_to_visit_list[i] = reorder(cluster_list[i])
-# 		time = calculate_time(sites_to_visit_list[i])
-# 		while(time>half_day_time):
-# 			POI_to_delegate = remove_site(sites_to_visit_list[i])				#removing the last element to fit the time inside half a day
-# 			if i < no_days-1 :
-# 				cluster_list[i+1].append(POI_to_delegate)
-# 			sites_to_visit_list[i] = reorder(sites_to_visit_list[i])
-# 			time = calculate_time(sites_to_visit_list[i])
-	
-# 	return sites_to_visit_list
-
-# def remove_site(sites_list):
-# 	grat_scores = [grat_score_dict[x] for x in sites_list]
-# 	min_val = min(grat_scores)
-# 	index_min = grat_scores.index(min_val)
-# 	return sites_list.pop(index_min)
-
-# def reorder(cluster):
-# 	print '		reorder'
-# 	bylat = copy.deepcopy(cluster)
-# 	bylatRev = copy.deepcopy(cluster)
-# 	bylng = copy.deepcopy(cluster)
-# 	bylngRev = copy.deepcopy(cluster)
-
-# 	bylat.sort(key=get_lat)
-# 	bylatRev.sort(key=get_lat,reverse=True)
-# 	bylng.sort(key=get_lng)
-# 	bylngRev.sort(key=get_lng,reverse=True)
-
-# 	times = [
-# 		calculate_time(bylat),
-# 		calculate_time(bylatRev),
-# 		calculate_time(bylng),
-# 		calculate_time(bylngRev)
-# 	]
-# 	sortedArrays = [
-# 		bylat,
-# 		bylatRev,
-# 		bylng,
-# 		bylngRev
-# 	]
-
-# 	sorted_times = sorted(times)
-	
-# 	for i in range(4):
-# 		if sorted_times[0] == times[i]:
-# 			return sortedArrays[i]
-
-	
+	return sorted(range(len(cluster_list)),key= lambda i : lat_lng_distance(calculate_cluster_center(cluster_list[i]), (point.latitude , point.longitude)))
 
 
 def tsp_POI_delegation(cluster_list,cluster_list_centroids, no_days):
@@ -219,7 +159,7 @@ def tsp_POI_delegation(cluster_list,cluster_list_centroids, no_days):
 		for POI in cluster_list[i]:
 			grat_score_dist_dict[POI] = dist_gratification(grat_score_dict[POI],POI,cluster_list_centroids[i],no_days)
 
-		cluster_list[i].sort(key=dist_gratification_sort, reverse=True)
+		cluster_list[i].sort(key=gratification_sort_dist, reverse=True)
 
 		
 		
@@ -235,7 +175,7 @@ def tsp_POI_delegation(cluster_list,cluster_list_centroids, no_days):
 				grat_score_dist_dict[POI] = dist_gratification(grat_score_dict[POI],POI,cluster_list_centroids[i],no_days)
 				# grat_score_dict[POI] = dist_gratification_k_closest(grat_score_dict[POI],POI,cluster_list[i],2)
 				# print POI, " gratification ", grat_score_dict[POI]
-			cluster_list[i].sort(key=dist_gratification_sort, reverse=True)					
+			cluster_list[i].sort(key=gratification_sort_dist, reverse=True)					
 			POI_to_delegate = cluster_list[i].pop(-1)				#removing the last element to fit the time inside half a day
 
 			cluster_list[i+1].append(POI_to_delegate)
@@ -251,7 +191,7 @@ def tsp_POI_delegation(cluster_list,cluster_list_centroids, no_days):
 	for POI in cluster_list[i]:
 		grat_score_dist_dict[POI] = dist_gratification(grat_score_dict[POI],POI,cluster_list_centroids[i],no_days)
 
-	cluster_list[i].sort(key=dist_gratification_sort, reverse=True)
+	cluster_list[i].sort(key=gratification_sort_dist, reverse=True)
 
 	while(len(cluster_list[i]) >= threshold):
 		# print cluster_list[i][-1]
@@ -259,18 +199,40 @@ def tsp_POI_delegation(cluster_list,cluster_list_centroids, no_days):
 
 	cluster_list_tsp[i] = tsp_solver(cluster_list[i])
 	time = calculate_time(cluster_list_tsp[i])
+	excluded_points = []
 	while(time>half_day_time):
 		for POI in cluster_list[i]:
 			grat_score_dist_dict[POI] = dist_gratification(grat_score_dict[POI],POI,cluster_list_centroids[i],no_days)
 			# print POI, " gratification ", grat_score_dict[POI]	
 			# grat_score_dict[POI] = dist_gratification_k_closest(grat_score_dict[POI],POI,cluster_list[i],2)
 			# print "++++++++++++++++++++++", cluster_list[i][-1].POI_name
-		# print cluster_list[i][-1]
-		cluster_list[i].sort(key=dist_gratification_sort, reverse=True)
-		del cluster_list[i][-1]			#removing the last element to fit the time inside half a day
+		cluster_list[i].sort(key=gratification_sort_dist, reverse=True)
+		excluded_points.append(cluster_list[i][-1])
+		del cluster_list[i][-1]
 		cluster_list_tsp[i] = tsp_solver(cluster_list[i])
 		time = calculate_time(cluster_list_tsp[i])
 		cluster_list_centroids[i] = calculate_cluster_center(cluster_list[i])
+
+	excluded_points.sort(key = gratification_sort, reverse = True)
+
+	print '		_______EXCLUDED POINTS'
+	print excluded_points
+	k = min(5,len(excluded_points))
+	for point in excluded_points[:k]:
+		print u'considering excluded point {}'.format(point.POI_name)
+		#sort the clusters in increasing order of distance from this point
+		dist_sorted_cluster_indices = sort_by_distance(point, cluster_list_tsp)
+		for cluster_index in dist_sorted_cluster_indices:
+			print '		cluster {} is closest.'.format(cluster_index)
+			if (half_day_time -  (calculate_time(cluster_list_tsp[cluster_index]) + float(point.average_time_spent))) >= 0.75 :
+				cluster_list_tsp[cluster_index].append(point)
+				print u'reassigned {} to cluster {}'.format(point.POI_name , cluster_index)
+				break
+
+
+			
+	for daynum in range(no_days):
+		cluster_list_tsp[daynum] = tsp_solver(cluster_list_tsp[daynum])
 	
 	return cluster_list_tsp
 
