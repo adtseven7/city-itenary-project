@@ -68,10 +68,9 @@ function getEventObject(POI_name,start_date){
     let event_object = {};
     let POI_start_date = new Date(start_date);
     let POI_end_date = new Date(start_date);
-    POI_end_date.setHours(POI_start_date.getHours() + 2);
     event_object.title = POI_name;
-    event_object.start = moment(POI_start_date);
-    event_object.end = moment(POI_end_date);
+    event_object.start = moment(POI_start_date).add(5, 'hours');
+    event_object.end = moment(POI_end_date).add(6, 'hours');
     event_object.editable = true;
     event_object.eventDurationEditable = true;
     event_object.eventStartEditable = true;
@@ -154,6 +153,7 @@ $(document).ready(function() {
                     }
                 },
                 header: { center: 'addIteneraryButton'},
+                minTime: '05:00:00',
                 schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
                 defaultView: 'agendaItenerary',
                 defaultDate: plan['start_date'],
