@@ -3,7 +3,7 @@ from ortools.constraint_solver import routing_enums_pb2
 import numpy as np
 from .models import DistanceTime
 from decimal import *
-import tsp
+# import tsp
 
 def create_distance_callback(dist_matrix):
   # Create a callback to calculate distances between cities.
