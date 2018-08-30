@@ -259,6 +259,7 @@ def tsp_POI_delegation(cluster_list,cluster_list_centroids, no_days):
 
 	cluster_list_tsp[i] = tsp_solver(cluster_list[i])
 	time = calculate_time(cluster_list_tsp[i])
+
 	extra_poi = []
 	while(time>half_day_time):
 		for POI in cluster_list[i]:
@@ -268,8 +269,7 @@ def tsp_POI_delegation(cluster_list,cluster_list_centroids, no_days):
 			# print "++++++++++++++++++++++", cluster_list[i][-1].POI_name
 		# print cluster_list[i][-1]
 		cluster_list[i].sort(key=dist_gratification_sort, reverse=True)
-		extra_poi.append(cluster_list[i][-1])
-		del cluster_list[i][-1]			#removing the last element to fit the time inside half a day
+		extra_poi.append(cluster_list[i].pop(-1))			#removing the last element to fit the time inside half a day
 		cluster_list_tsp[i] = tsp_solver(cluster_list[i])
 		time = calculate_time(cluster_list_tsp[i])
 		cluster_list_centroids[i] = calculate_cluster_center(cluster_list[i])
