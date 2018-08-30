@@ -41,6 +41,15 @@ def gratification_sort(POI):
 def dist_gratification_sort(POI):
 	return grat_score_dist_dict[POI]
 
+def cluster_gratification(cluster_list):
+	avg_grat = 0.0
+	for POI in cluster_list:
+		avg_grat+=grat_score_dict[POI]
+	if(len(cluster_list)==0):
+		return 0.0
+	avg_grat/=len(cluster_list)
+	return avg_grat
+
 
 def get_lat(POI):
 	return POI.latitude
@@ -126,10 +135,11 @@ def generate_itenerary(form):
 	# print ">>>>>>>>>>><<<<<<<<<<<<>>>>>>>>><<<<<<<<<<<<"
 	# print cluster_centroids
 	cluster_list = tsp_POI_delegation(cluster_list,cluster_centroids,no_days)
-	#cluster_list = new_find_route(cluster_list)
-	# print(cluster_list[0])
+	
+	cluster_list.sort(key = cluster_gratification, reverse = True)
+
 	output = itenerary_json(cluster_list,form)
-	#print(output)
+	
 	return output
 
 def kMeanClustering(POI_list,no_days):
