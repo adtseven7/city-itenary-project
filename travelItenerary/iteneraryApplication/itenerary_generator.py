@@ -96,13 +96,15 @@ def generate_itenerary(form):
 		POI_list.append(POI)
 
 	# print POI_list[1].average_time_spent
-	# for i in range(0,len(POI_list)):
-	# 	modify_time_to_spend(POI_list[i],no_days)
+	for i in range(0,len(POI_list)):
+		modify_time_to_spend(POI_list[i],no_days)
 
 	# print POI_list[1].average_time_spent
 
 	generate_gratification_score_all(POI_list,form)
 	POI_list.sort(key=gratification_sort, reverse=True)
+	for POI in POI_list:
+		print ">>>>>>>>>>>>>>>>>>>>>>>>>...................", POI.POI_name, grat_score_dict[POI]
 
 	while(len(POI_list) >= threshold*no_days):
 		# print POI_list[-1]
