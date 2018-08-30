@@ -21,16 +21,12 @@ var colors = [
 var defaultLegendcolor = 'rgb(250, 140, 0)';
 
 function onMapTabOpened(){
-    console.log('yo');
     map_plan = JSON.parse(document.getElementById('plan_actual').value).tour
    
     recreateMapLegendElements();
     hideMarkers();
     createMarkers();
-    displayDate();
-    displayMapLegend();
-    displayRoute();
-
+    $('#tab-day-0').trigger('click');
 
 }
 
@@ -60,7 +56,7 @@ function addMapLegendElements(){
         innerDayPlanHTML = "";
         for (let i = 0; i < route.length; i++) {
             let placeHtml =
-            `<li class="visit-name">
+            `<li class="visit-name" id="legend-${daynum}-${i}">
             <span>
             <span class="map-marker-circle mapMarkerDay${daynum}" style="background-color: ${defaultLegendcolor};">
             ${String.fromCharCode('A'.charCodeAt(0) + i)}
@@ -73,7 +69,7 @@ function addMapLegendElements(){
             if (i != route.length - 1){
                 travelHtml =
                 `<li class="hop-duration bg-stripe">
-                <a class="directions text-link" href="javascript:void(0)" target="_blank">
+                <a class="directions text-link" href="javascript:void(0)" target="_blank" style="cursor : default;">
                 ${getTravelTime(daynum,i)}</a>
                 </li>`;
             }
@@ -97,10 +93,10 @@ function addMapLegendElements(){
 
 function createLeftPanel(){
     let dayListElem = $('#dayList');
-    dayListElem.append('<div class="day-box in-plan active"><div class="day text-link">' + 1 + '</div></div>');
+    dayListElem.append('<div id="tab-day-0" class="day-box in-plan active"><div class="day text-link">' + 1 + '</div></div>');
     
     for (let i = 2; i <= map_plan.length; i++) {
-        dayListElem.append('<div class="day-box in-plan"><div class="day text-link">' + i + '</div></div>');
+        dayListElem.append(`<div id="tab-day-${i}"class="day-box in-plan"><div class="day text-link">${i}</div></div>`);
     }
     dayListElem.append('<div class="day-box in-plan" id="allTab"><div class="day text-link">All</div></div>');    
 }
@@ -221,12 +217,29 @@ function createMarkers(){
                 } ,
                 icon : pinSymbol(colors[daynum])
             });
-            let infoWindow = new google.maps.InfoWindow({content : route[i].name})
+            let infoWindow = new google.maps.InfoWindow({
+                    content : `<div style='float:left'>
+                    <img src="/static/${route[i].images[0].replace('new_data','small')}"></div>
+                    <div style='float:right; padding: 8px;max-width: 20ch;'>
+                        <b style="max-width: 15ch;">${route[i].name}</b><br/>
+                        ${route[i].time_to_show}</div>`
+                    // route[i].name
+                })
             tmpMarkers[i].addListener('mouseover',function(){
                 infoWindow.open(map,tmpMarkers[i]);
             });
             tmpMarkers[i].addListener('mouseout',function(){
                 infoWindow.close();
+            });
+
+            let lengendEl = $(`#legend-${daynum}-${i}`);
+            lengendEl.mouseover(function(){
+                infoWindow.open(map,tmpMarkers[i]);
+                lengendEl.attr('style','cursor : pointer');
+            });
+            lengendEl.mouseout(function(){
+                infoWindow.close();
+                lengendEl.attr('style','cursor : default');
             });
         }
         markers[daynum] = tmpMarkers;

@@ -107,8 +107,8 @@ def generate_itenerary(form):
 		POI_list.append(POI)
 
 	# print POI_list[1].average_time_spent
-	for i in range(0,len(POI_list)):
-		modify_time_to_spend(POI_list[i],no_days)
+	# for i in range(0,len(POI_list)):
+	# 	modify_time_to_spend(POI_list[i],no_days)
 
 	# print POI_list[1].average_time_spent
 
@@ -603,7 +603,3 @@ def generate_itenerary_greedy(POI_list, form):
 	if no_days == 1:
 		final_path[0] = tsp_solver(final_path[0])
 	return final_path
-
-
-
-

@@ -6,7 +6,7 @@ from heapq import nsmallest
 
 R = 6373.0
 not_matching_score = 10
-matching_score = 100
+matching_score = 5000
 
 def p_mean(rating):
 	return max(0.0, float(rating)/5.0)
@@ -18,7 +18,8 @@ def calc_popularity(POI):
 	if(POI.google_rank <=10):
 		multiplier*= 5.0/(POI.google_rank) + 0.5
 	a = (float(POI.rating) * float(POI.no_people_who_rated) + x * y) / (float(POI.no_people_who_rated) + y)
-	return math.exp(a/2)*multiplier
+	return math.exp(a/2)*(multiplier/2 + 0.5)
+
 
 	# z_score = st.norm.ppf(0.995)
 	# p = p_mean(POI.rating)
