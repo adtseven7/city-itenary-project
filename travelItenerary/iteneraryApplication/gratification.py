@@ -6,7 +6,7 @@ from heapq import nsmallest
 
 R = 6373.0
 not_matching_score = 10
-matching_score = 50
+matching_score = 100
 
 def p_mean(rating):
 	return max(0.0, float(rating)/5.0)
@@ -16,18 +16,18 @@ def calc_popularity(POI):
 	y = 20000
 	multiplier = 1
 	if(POI.google_rank <=10):
-		multiplier*= 5.0/(POI.google_rank)
-	return (multiplier+0.5)*((float(POI.rating) * float(POI.no_people_who_rated) + x * y) / (float(POI.no_people_who_rated) + y))**2
-	return a*rank_multiplier
+		multiplier*= 5.0/(POI.google_rank) + 0.5
+	a = (float(POI.rating) * float(POI.no_people_who_rated) + x * y) / (float(POI.no_people_who_rated) + y)
+	return math.exp(a/2)*multiplier
 
-	z_score = st.norm.ppf(0.995)
-	p = p_mean(POI.rating)
-	n = POI.no_people_who_rated
-	lower_bound = p+(z_score*z_score)/(2*n)
-	lower_bound -=z_score*math.sqrt((p*(1-p) + z_score*z_score/(4*n))/n)
-	lower_bound/=(1+z_score*z_score/n)
+	# z_score = st.norm.ppf(0.995)
+	# p = p_mean(POI.rating)
+	# n = POI.no_people_who_rated
+	# lower_bound = p+(z_score*z_score)/(2*n)
+	# lower_bound -=z_score*math.sqrt((p*(1-p) + z_score*z_score/(4*n))/n)
+	# lower_bound/=(1+z_score*z_score/n)
 
-	return lower_bound*5.0
+	# return lower_bound*5.0
 
 def gratification_score(POI,form):
 	POI_types = POI.types.all()
@@ -62,7 +62,7 @@ def dist_gratification(grat_score, POI, cluster_centroid, no_days):
 	lat = POI.latitude
 	lng = POI.longitude
 	distance = lat_lng_distance((lat,lng),cluster_centroid)
-	return grat_score*math.exp(-0.01*(no_days-1)*distance)
+	return grat_score*math.exp(-0.1*(no_days-1)*distance)
 
 
 def dist_gratification_k_closest(grat_score,POI,cluster,k):

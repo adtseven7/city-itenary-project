@@ -41,6 +41,15 @@ def gratification_sort(POI):
 def dist_gratification_sort(POI):
 	return grat_score_dist_dict[POI]
 
+def cluster_gratification(cluster_list):
+	avg_grat = 0.0
+	for POI in cluster_list:
+		avg_grat+=grat_score_dict[POI]
+	if(len(cluster_list)==0):
+		return 0.0
+	avg_grat/=len(cluster_list)
+	return avg_grat
+
 
 def get_lat(POI):
 	return POI.latitude
@@ -93,16 +102,20 @@ def generate_itenerary(form):
 	POI_list = []
 	POI_querySet = PointOfInterest.objects.filter(POI_city = city)
 	for POI in POI_querySet:
+		if POI.google_rank > 20 and POI.no_people_who_rated <100:
+			continue
 		POI_list.append(POI)
 
 	# print POI_list[1].average_time_spent
-	# for i in range(0,len(POI_list)):
-	# 	modify_time_to_spend(POI_list[i],no_days)
+	for i in range(0,len(POI_list)):
+		modify_time_to_spend(POI_list[i],no_days)
 
 	# print POI_list[1].average_time_spent
 
 	generate_gratification_score_all(POI_list,form)
 	POI_list.sort(key=gratification_sort, reverse=True)
+	for POI in POI_list:
+		print ">>>>>>>>>>>>>>>>>>>>>>>>>...................", POI.POI_name, grat_score_dict[POI]
 
 	while(len(POI_list) >= threshold*no_days):
 		# print POI_list[-1]
@@ -122,10 +135,11 @@ def generate_itenerary(form):
 	# print ">>>>>>>>>>><<<<<<<<<<<<>>>>>>>>><<<<<<<<<<<<"
 	# print cluster_centroids
 	cluster_list = tsp_POI_delegation(cluster_list,cluster_centroids,no_days)
-	#cluster_list = new_find_route(cluster_list)
-	# print(cluster_list[0])
+	
+	cluster_list.sort(key = cluster_gratification, reverse = True)
+
 	output = itenerary_json(cluster_list,form)
-	#print(output)
+	
 	return output
 
 def kMeanClustering(POI_list,no_days):
