@@ -16,18 +16,9 @@ def calc_popularity(POI):
 	y = 20000
 	multiplier = 1
 	if(POI.google_rank <=10):
-		multiplier*= 5.0/(POI.google_rank)
-	return (multiplier+0.5)*((float(POI.rating) * float(POI.no_people_who_rated) + x * y) / (float(POI.no_people_who_rated) + y))**2
-	return a*rank_multiplier
-
-	z_score = st.norm.ppf(0.995)
-	p = p_mean(POI.rating)
-	n = POI.no_people_who_rated
-	lower_bound = p+(z_score*z_score)/(2*n)
-	lower_bound -=z_score*math.sqrt((p*(1-p) + z_score*z_score/(4*n))/n)
-	lower_bound/=(1+z_score*z_score/n)
-
-	return lower_bound*5.0
+		multiplier*= 5.0/(POI.google_rank) + 0.5
+	a = (float(POI.rating) * float(POI.no_people_who_rated) + x * y) / (float(POI.no_people_who_rated) + y)
+	return math.exp(a/2)*multiplier
 
 def gratification_score(POI,form):
 	POI_types = POI.types.all()

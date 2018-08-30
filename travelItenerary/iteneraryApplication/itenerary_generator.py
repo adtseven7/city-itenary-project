@@ -93,6 +93,8 @@ def generate_itenerary(form):
 	POI_list = []
 	POI_querySet = PointOfInterest.objects.filter(POI_city = city)
 	for POI in POI_querySet:
+		if POI.google_rank > 20 and POI.no_people_who_rated <100:
+			continue
 		POI_list.append(POI)
 
 	# print POI_list[1].average_time_spent
@@ -103,6 +105,8 @@ def generate_itenerary(form):
 
 	generate_gratification_score_all(POI_list,form)
 	POI_list.sort(key=gratification_sort, reverse=True)
+	for POI in POI_list:
+		print ">>>>>>>>>>>>>>>>>>>>>>>>>...................", POI.POI_name, grat_score_dict[POI]
 
 	while(len(POI_list) >= threshold*no_days):
 		# print POI_list[-1]
@@ -589,7 +593,3 @@ def generate_itenerary_greedy(POI_list, form):
 	if no_days == 1:
 		final_path[0] = tsp_solver(final_path[0])
 	return final_path
-
-
-
-
