@@ -93,6 +93,8 @@ def generate_itenerary(form):
 	POI_list = []
 	POI_querySet = PointOfInterest.objects.filter(POI_city = city)
 	for POI in POI_querySet:
+		if POI.google_rank > 20 and POI.no_people_who_rated <100:
+			continue
 		POI_list.append(POI)
 
 	# print POI_list[1].average_time_spent
