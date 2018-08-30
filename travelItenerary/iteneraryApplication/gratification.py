@@ -17,6 +17,7 @@ def calc_popularity(POI):
 	if(POI.google_rank <=10):
 		multiplier*= 5.0/(POI.google_rank) + 0.5
 	a = (float(POI.rating) * float(POI.no_people_who_rated) + x * y) / (float(POI.no_people_who_rated) + y)
+	a = a* math.log(POI.no_people_who_rated)
 	return math.exp(a/2)*(multiplier/2 + 0.5)
 
 
