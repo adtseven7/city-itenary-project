@@ -196,7 +196,7 @@
                 {% endfor %}
               </datalist><br/>
               <div id="errorCity" class="alert alert-danger" style="width:50%; line-height: 5px; margin-left: 25%; visibility: hidden;">
-                <strong>Error!</strong> in the city
+                <strong>Invalid city name</strong>
               </div>
 <!--               Date<br>
  -->
@@ -295,10 +295,10 @@ change end -->
 
     <script>
       $('input[name="dates"]').daterangepicker({
-          "startDate": "08/28/2018",
-          "endDate": "08/28/2018",
-          "minDate": "08/28/2018",
-          "maxDate": "09/28/2018"
+          "startDate": "08/31/2018",
+          "endDate": "08/31/2018",
+          "minDate": "08/31/2018",
+          "maxDate": "09/30/2018"
       }, function(start, end, label) {
         console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
       });
