@@ -5,8 +5,7 @@ from math import sin, cos, sqrt, atan2, radians
 from heapq import nsmallest
 
 R = 6373.0
-not_matching_score = 10
-matching_score = 50000
+matching_score = 100
 
 def p_mean(rating):
 	return max(0.0, float(rating)/5.0)
@@ -34,7 +33,7 @@ def gratification_score(POI,form):
 	POI_types = POI.types.all()
 	form_types = form['type_tags']
 
-	grat_score = 100
+	grat_score = 3
 	for type in form_types:
 		if type in POI_types:
 			grat_score+=matching_score
